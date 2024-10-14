@@ -15,7 +15,7 @@ import BookingsHistory from "./pages/BookingsHistory";
 
 function App() {
   return (
-    <>
+    <div className="font-sans bg-background">
       <div className="absolute right-0 top-4 left-0 md:relative">
         <Toaster />
       </div>
@@ -42,7 +42,7 @@ function App() {
           />
         </Routes>
       </Router>
-    </>
+    </div>
   );
 }
 
