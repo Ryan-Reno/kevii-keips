@@ -9,6 +9,9 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
+import Calendar from "./pages/Calendar";
+import Booking from "./pages/Book";
+import History from "./pages/BookingsHistory";
 
 function App() {
   return (
@@ -27,6 +30,18 @@ function App() {
           <Route
             path="/dashboard"
             element={<PrivateRoute element={<Dashboard />} />}
+          />
+          <Route
+            path="/calendar"
+            element={<PrivateRoute element={<Calendar />} />}
+          />
+          <Route
+            path="/book"
+            element={<PrivateRoute element={<Booking />} />}
+          />
+          <Route
+            path="/bookings"
+            element={<PrivateRoute element={<History />} />}
           />
         </Routes>
       </Router>

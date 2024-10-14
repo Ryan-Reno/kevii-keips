@@ -1,4 +1,9 @@
-import { ArrowBigDown, CalendarIcon, HomeIcon } from "lucide-react";
+import {
+  CalendarArrowDown,
+  CalendarIcon,
+  History,
+  HomeIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,18 +17,13 @@ import { Dock, DockIcon } from "@/components/ui/dock";
 
 const DATA = {
   navbar: [
-    { href: "#", icon: HomeIcon, label: "Home" },
-    { href: "#", icon: CalendarIcon, label: "Calendar" },
+    { href: "/dashboard", icon: HomeIcon, label: "Home" },
+    { href: "/book", icon: CalendarArrowDown, label: "Book" },
   ],
-  contact: {
-    social: {
-      GitHub: {
-        name: "ASD",
-        url: "#",
-        icon: ArrowBigDown,
-      },
-    },
-  },
+  navbar2: [
+    { href: "/calendar", icon: CalendarIcon, label: "Calendar" },
+    { href: "/bookings", icon: History, label: "Bookings" },
+  ],
 };
 
 export function DockBar() {
@@ -38,10 +38,20 @@ export function DockBar() {
                   <a
                     href={item.href}
                     aria-label={item.label}
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "icon" }),
-                      "size-12 rounded-full"
-                    )}
+                    className={`${
+                      window.location.pathname === item.href
+                        ? cn(
+                            buttonVariants({
+                              variant: "secondary",
+                              size: "icon",
+                            }),
+                            "size-12 rounded-full"
+                          )
+                        : cn(
+                            buttonVariants({ variant: "ghost", size: "icon" }),
+                            "size-12 rounded-full"
+                          )
+                    }`}
                   >
                     <item.icon className="size-4" />
                   </a>
@@ -53,23 +63,33 @@ export function DockBar() {
             </DockIcon>
           ))}
           <Separator orientation="vertical" className="h-full" />
-          {Object.entries(DATA.contact.social).map(([name, social]) => (
-            <DockIcon key={name}>
+          {DATA.navbar2.map((item) => (
+            <DockIcon key={item.label}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <a
-                    href={social.url}
-                    aria-label={social.name}
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "icon" }),
-                      "size-12 rounded-full"
-                    )}
+                    href={item.href}
+                    aria-label={item.label}
+                    className={`${
+                      window.location.pathname === item.href
+                        ? cn(
+                            buttonVariants({
+                              variant: "secondary",
+                              size: "icon",
+                            }),
+                            "size-12 rounded-full"
+                          )
+                        : cn(
+                            buttonVariants({ variant: "ghost", size: "icon" }),
+                            "size-12 rounded-full"
+                          )
+                    }`}
                   >
-                    <social.icon className="size-4" />
+                    <item.icon className="size-4" />
                   </a>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{name}</p>
+                  <p>{item.label}</p>
                 </TooltipContent>
               </Tooltip>
             </DockIcon>
