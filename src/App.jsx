@@ -10,8 +10,8 @@ import Dashboard from "./pages/Dashboard";
 import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
 import Calendar from "./pages/Calendar";
-import Booking from "./pages/Book";
-import History from "./pages/BookingsHistory";
+import Book from "./pages/Book";
+import BookingsHistory from "./pages/BookingsHistory";
 
 function App() {
   return (
@@ -35,13 +35,10 @@ function App() {
             path="/calendar"
             element={<PrivateRoute element={<Calendar />} />}
           />
-          <Route
-            path="/book"
-            element={<PrivateRoute element={<Booking />} />}
-          />
+          <Route path="/book" element={<PrivateRoute element={<Book />} />} />
           <Route
             path="/bookings"
-            element={<PrivateRoute element={<History />} />}
+            element={<PrivateRoute element={<BookingsHistory />} />}
           />
         </Routes>
       </Router>

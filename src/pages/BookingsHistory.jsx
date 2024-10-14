@@ -1,6 +1,6 @@
 import { DockBar } from "./Dock";
 
-function History() {
+function BookingsHistory() {
   return (
     <div>
       <h1>Bookings History</h1>
@@ -13,4 +13,4 @@ function History() {
   );
 }
 
-export default History;
+export default BookingsHistory;
