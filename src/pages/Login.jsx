@@ -60,6 +60,10 @@ function Login() {
           description: "You will be redirected shortly.",
           variant: "default",
         });
+
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
       }
     } catch (error) {
       setIsLoggingIn(false);
