@@ -34,6 +34,7 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Loader2, User } from "lucide-react";
 
 const MAX_DAILY_BOOKING = 5;
 const BOOKING_START_TIME = "06:00";
@@ -96,21 +97,38 @@ function Book() {
   const [data, setData] = useState({});
   const [selectedTime, setSelectedTime] = useState({});
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(0.5);
+  const [weekDates, setWeekDates] = useState([]);
 
   const [loading, setLoading] = useState(false);
-  const [weekDates, setWeekDates] = useState([]);
+  const [isBooking, setIsBooking] = useState(false);
 
   useEffect(() => {
     setLoading(true);
+    setIsBooking(true);
     const today = format(new Date(), "yyyy-MM-dd");
 
     axiosInstance
       .get(
-        `/api/bookings/week-count?date=${today}&startOfWeek=true&startTime=${BOOKING_START_TIME}&endTime=${BOOKING_END_TIME}`
+        `/api/bookings/week-count?date=${today}&startOfWeek=true&startTime=${BOOKING_START_TIME}&endTime=${BOOKING_END_TIME}&useSpecialUserValue=true`
       )
       .then((response) => {
-        setLoading(false);
         setData(response.data);
+      })
+      .catch((error) => {
+        toast({
+          title: "Error",
+          description:
+            "There was an error, we will try again. This page will reload soon.",
+          variant: "destructive",
+        });
+        console.error(error);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .finally(() => {
+        setLoading(false);
+        setIsBooking(false);
       });
 
     const todayDate = new Date();
@@ -162,21 +180,25 @@ function Book() {
 
   function getColor(value, isDisabled) {
     if (isDisabled) {
-      return "bg-gray-500";
+      return "bg-gray-300";
     }
     switch (value) {
       case 0:
-        return "bg-gray-100";
+        return "bg-slate-100";
       case 1:
         return "bg-blue-200";
       case 2:
-        return "bg-green-200";
+        return "bg-teal-200";
       case 3:
-        return "bg-yellow-300";
+        return "bg-yellow-200";
       case 4:
         return "bg-orange-300";
+      case 5:
+        return "bg-red-400";
+      case 100:
+        return "bg-green-500";
       default:
-        return "bg-red-300";
+        return "bg-gray-200";
     }
   }
 
@@ -189,28 +211,35 @@ function Book() {
     const date = convertToISO(selectedTime);
     const duration = selectedTimeSlot;
 
-    try {
-      const response = await axiosInstance.post("/api/bookings", {
+    setIsBooking(true);
+    axiosInstance
+      .post("/api/bookings", {
         date,
         duration,
-      });
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          toast({
+            title: "Booking",
+            description: "Booking successful, page will reload soon.",
+          });
 
-      if (response.status === 201) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
         toast({
-          title: "Booking",
-          description: "Booking successful",
+          title: "Booking Failed",
+          description: `${error.response.data.error}`,
+          variant: "destructive",
         });
-
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Booking Failed",
-        description: `${error.response.data.error}`,
-        variant: "destructive",
+      })
+      .finally(() => {
+        setIsBooking(false);
       });
-    }
   }
 
   function getAvailableTimeSlots(date, time) {
@@ -219,14 +248,55 @@ function Book() {
     const availableHours =
       (endTime.getTime() - bookingDateTime.getTime()) / (1000 * 60 * 60);
 
+    let userBookingEnd = null;
+    for (let i = timeSlots.indexOf(time); i < timeSlots.length; i++) {
+      if (data[date][timeSlots[i]] === 100) {
+        if (!userBookingEnd) {
+          userBookingEnd = timeSlots[i];
+        }
+      } else if (userBookingEnd) {
+        break;
+      }
+    }
+
+    if (userBookingEnd) {
+      const userBookingEndTime = parse(
+        userBookingEnd,
+        "HH:mm",
+        bookingDateTime
+      );
+      const hoursUntilUserBooking =
+        (userBookingEndTime.getTime() - bookingDateTime.getTime()) /
+        (1000 * 60 * 60);
+      return [0.5, 1, 1.5, 2, 2.5, 3].filter(
+        (slot) => slot <= Math.min(availableHours, hoursUntilUserBooking)
+      );
+    }
+
     return [0.5, 1, 1.5, 2, 2.5, 3].filter((slot) => slot <= availableHours);
+  }
+
+  function getFormattedDate() {
+    const today = new Date();
+
+    const options = {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    };
+
+    return today.toLocaleDateString("en-GB", options);
   }
 
   return (
     <div className="md:py-5 md:px-7 py-10 px-4">
       <main>
-        <div className="flex items-center justify-center md:mb-3 mb-5">
-          <h1 className="text-xl font-bold">Book</h1>
+        <div className="flex items-center justify-center md:mb-3 mb-5 flex-col">
+          <h1 className="text-2xl font-bold text-primary">Book</h1>
+          <h1 className="text-md font-bold text-muted-foreground">
+            {getFormattedDate()}
+          </h1>
         </div>
 
         {/* DockBar */}
@@ -256,7 +326,7 @@ function Book() {
                 </TableHeader>
               </Table>
             </div>
-            <div className="md:h-[65vh] h-[70vh] overflow-auto">
+            <div className="md:h-[65vh] h-[67vh] overflow-auto">
               <Table>
                 <TableBody>
                   {loading
@@ -347,20 +417,31 @@ function Book() {
                                                 selectedTimeSlot === 0 ||
                                                 selectedTimeSlot ===
                                                   undefined ||
-                                                selectedTimeSlot === ""
+                                                selectedTimeSlot === "" ||
+                                                isBooking === true ||
+                                                loading === true
                                               }
                                             >
                                               <Button
-                                                className="w-full"
+                                                className="w-full flex justify-center items-center gap-3"
                                                 disabled={
                                                   selectedTimeSlot === null ||
                                                   selectedTimeSlot === 0 ||
                                                   selectedTimeSlot ===
                                                     undefined ||
-                                                  selectedTimeSlot === ""
+                                                  selectedTimeSlot === "" ||
+                                                  isBooking === true ||
+                                                  loading === true
                                                 }
                                               >
-                                                Book
+                                                {isBooking ? (
+                                                  <Loader2 className="w-4 h-4 animate-spin" />
+                                                ) : (
+                                                  <></>
+                                                )}
+                                                {isBooking
+                                                  ? "Booking..."
+                                                  : "Book"}
                                               </Button>
                                             </DialogTrigger>
                                             <DialogContent>
@@ -408,7 +489,13 @@ function Book() {
                                       cellValue
                                     )}`}
                                   >
-                                    {cellValue}
+                                    <div>
+                                      {cellValue === 100 ? (
+                                        <User className="md:w-4 md:h-4 w-3 h-3 inline-block" />
+                                      ) : (
+                                        cellValue
+                                      )}
+                                    </div>
                                   </TableCell>
                                 )}
                               </td>
