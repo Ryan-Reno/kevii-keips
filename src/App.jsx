@@ -9,9 +9,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
-import Calendar from "./pages/Calendar";
 import Book from "./pages/Book";
-import BookingsHistory from "./pages/BookingsHistory";
 import Checkin from "./pages/Checkin";
 
 function App() {
@@ -36,15 +34,7 @@ function App() {
             path="/checkin"
             element={<PrivateRoute element={<Checkin />} />}
           />
-          <Route
-            path="/calendar"
-            element={<PrivateRoute element={<Calendar />} />}
-          />
           <Route path="/book" element={<PrivateRoute element={<Book />} />} />
-          <Route
-            path="/bookings"
-            element={<PrivateRoute element={<BookingsHistory />} />}
-          />
         </Routes>
       </Router>
     </div>

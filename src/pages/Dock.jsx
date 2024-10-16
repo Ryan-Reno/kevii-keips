@@ -1,10 +1,4 @@
-import {
-  CalendarArrowDown,
-  CalendarIcon,
-  Clock,
-  History,
-  HomeIcon,
-} from "lucide-react";
+import { CalendarArrowDown, Clock, HomeIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -22,15 +16,11 @@ const DATA = {
     { href: "/checkin", icon: Clock, label: "Checkin" },
     { href: "/book", icon: CalendarArrowDown, label: "Book" },
   ],
-  navbar2: [
-    { href: "/calendar", icon: CalendarIcon, label: "Calendar" },
-    { href: "/bookings", icon: History, label: "Bookings" },
-  ],
 };
 
 export function DockBar() {
   return (
-    <div className="z-50">
+    <div className="z-[100]">
       <TooltipProvider>
         <Dock direction="middle">
           {DATA.navbar.map((item) => (
@@ -64,8 +54,10 @@ export function DockBar() {
               </Tooltip>
             </DockIcon>
           ))}
-          <Separator orientation="vertical" className="h-full" />
-          {DATA.navbar2.map((item) => (
+          {DATA?.navbar2 && (
+            <Separator orientation="vertical" className="h-full" />
+          )}
+          {DATA?.navbar2?.map((item) => (
             <DockIcon key={item.label}>
               <Tooltip>
                 <TooltipTrigger asChild>
