@@ -41,6 +41,7 @@ import {
   formatTime,
   convertToISO,
   getFormattedDate,
+  formatTimeShort,
 } from "../helper/functions";
 
 const MAX_DAILY_BOOKING = 5;
@@ -250,7 +251,7 @@ function Book() {
   }
 
   return (
-    <div className="md:py-5 md:px-7 py-10 px-4">
+    <div className="md:py-5 md:px-7 py-5 px-4">
       <main>
         <div className="flex items-center justify-center md:mb-3 mb-5 flex-col">
           <h1 className="text-2xl font-bold text-primary">Book</h1>
@@ -260,7 +261,7 @@ function Book() {
         </div>
 
         {/* DockBar */}
-        <div className="fixed right-0 left-0 md:bottom-5 bottom-10">
+        <div className="fixed right-0 left-0 md:bottom-5 bottom-5">
           <DockBar />
         </div>
 
@@ -286,27 +287,51 @@ function Book() {
                 </TableHeader>
               </Table>
             </div>
-            <div className="md:h-[65vh] h-[67vh] overflow-auto">
+            <div className="md:h-[65vh] h-[60vh] overflow-auto">
               <Table>
                 <TableBody>
                   {loading
                     ? times.map((time, rowIndex) => (
                         <TableRow key={rowIndex}>
-                          <TableCell key={`time-${rowIndex}`} className="w-24">
-                            {formatTime(time)}
+                          <TableCell
+                            key={`time-${rowIndex}`}
+                            className={`md:w-24 w-18 md:text-md text-sm ${
+                              formatTimeShort(time).period === "PM"
+                                ? "bg-red-400"
+                                : "bg-blue-400"
+                            }`}
+                          >
+                            <span className="md:hidden block">
+                              {formatTimeShort(time).time}
+                            </span>
+                            <span className="md:block hidden">
+                              {formatTime(time)}
+                            </span>
                           </TableCell>
                           {Array.from({ length: 7 }).map((_, colIndex) => (
                             <TableCell key={colIndex} className="w-24">
-                              <Skeleton className="md:h-[22px] h-[35px] w-full" />
+                              <Skeleton className="md:h-[22px] h-[22px] w-full" />
                             </TableCell>
                           ))}
                         </TableRow>
                       ))
                     : timeSlots.map((time) => (
                         <TableRow key={time}>
-                          <TableCell className="w-24">
-                            {formatTime(time)}
+                          <TableCell
+                            className={`md:w-24 w-18 md:text-md text-sm ${
+                              formatTimeShort(time).period === "PM"
+                                ? "bg-red-400"
+                                : "bg-blue-400"
+                            }`}
+                          >
+                            <span className="md:hidden block">
+                              {formatTimeShort(time).time}
+                            </span>
+                            <span className="md:block hidden">
+                              {formatTime(time)}
+                            </span>
                           </TableCell>
+
                           {dates.map((date) => {
                             const cellValue = data[date][time];
 

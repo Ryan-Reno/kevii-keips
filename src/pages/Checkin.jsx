@@ -36,8 +36,11 @@ function Checkin() {
   const [openQr, setOpenQr] = useState(false);
   const [scanResult, setScanResult] = useState("");
   const [isCheckingIn, setIsCheckingIn] = useState(false);
-  const [checkinStatus, setCheckinStatus] = useState(false);
+  const [checkinStatus, setCheckinStatus] = useState({});
+  const [checkinData, setCheckinData] = useState({});
   const [isFetchingStatus, setIsFetchingStatus] = useState(true);
+  const [isFetchingStatusCheckins, setIsFetchingStatusCheckins] =
+    useState(true);
   const [refresh, setRefresh] = useState(0);
 
   const handleQrResult = (result) => {
@@ -65,13 +68,27 @@ function Checkin() {
       });
   }, [refresh]);
 
+  useEffect(() => {
+    setIsFetchingStatusCheckins(true);
+    axiosInstance
+      .get("/api/checkin/all")
+      .then((response) => {
+        setCheckinData(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsFetchingStatusCheckins(false);
+      });
+  }, [refresh]);
+
   const checkIn = () => {
     setIsCheckingIn(true);
 
     axiosInstance
       .post("/api/checkin/checkin")
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
         toast({
           title: "Check-in Successful",
           description: "You have successfully checked in.",
@@ -97,8 +114,7 @@ function Checkin() {
 
     axiosInstance
       .post("/api/checkin/checkout")
-      .then((response) => {
-        console.log(response.data);
+      .then(() => {
         toast({
           title: "Check-out Successful",
           description: "You have successfully checked out.",
@@ -129,15 +145,13 @@ function Checkin() {
       <div className="absolute right-0 top-4 left-0 md:relative z-50">
         <Toaster />
       </div>
-      <div className="md:py-5 md:px-7 py-10 px-4">
+      <div className="md:py-5 md:px-7 py-5 px-4 pb-20">
         <div className="flex items-center justify-center md:mb-3 mb-5 flex-col">
           <h1 className="text-2xl font-bold text-primary">Checkin</h1>
           <h1 className="text-md font-bold text-muted-foreground">
             {getFormattedDate()}
           </h1>
         </div>
-        {/* TODO: idk what is this page for */}
-
         {isFetchingStatus ? (
           <div>
             <Skeleton className="w-full h-48" />
@@ -213,7 +227,9 @@ function Checkin() {
           </Card>
         ) : (
           <div>
-            <Button onClick={openQRFunc}>{openQr ? "Close" : "Checkin"}</Button>
+            <Button onClick={openQRFunc} className="w-full">
+              {openQr ? "Close" : "Checkin"}
+            </Button>
 
             {!openQr &&
               scanResult !== "KEVII GYM: N3s9DZ91Q4hGt2AEVKSg4" &&
@@ -229,7 +245,49 @@ function Checkin() {
           </div>
         )}
 
-        <div className="fixed right-0 left-0 md:bottom-5 bottom-10">
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-4">Past Check-ins</h2>
+          {isFetchingStatusCheckins ? (
+            Array.from({ length: 3 }).map((_, index) => (
+              <Card key={index} className="mb-4">
+                <CardHeader>
+                  <Skeleton className="h-6 w-3/4" />
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-4 w-1/2 mb-2" />
+                  <Skeleton className="h-4 w-1/3" />
+                </CardContent>
+              </Card>
+            ))
+          ) : checkinData.length > 0 ? (
+            checkinData.map((checkin) => (
+              <Card key={checkin._id} className="mb-4">
+                <CardHeader className="pb-1">
+                  <CardTitle className="text-lg">
+                    {checkin.checkOutTime
+                      ? "Completed Session"
+                      : "Ongoing Session"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>
+                    Check-in: {formatDateTimeMix(new Date(checkin.checkInTime))}
+                  </p>
+                  {checkin.checkOutTime && (
+                    <p>
+                      Check-out:{" "}
+                      {formatDateTimeMix(new Date(checkin.checkOutTime))}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <p>No past check-ins found.</p>
+          )}
+        </div>
+
+        <div className="fixed right-0 left-0 md:bottom-5 bottom-5">
           <DockBar />
         </div>
       </div>

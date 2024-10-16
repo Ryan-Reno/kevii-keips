@@ -1,6 +1,7 @@
 import {
   CalendarArrowDown,
   CalendarIcon,
+  Clock,
   History,
   HomeIcon,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import { Dock, DockIcon } from "@/components/ui/dock";
 const DATA = {
   navbar: [
     { href: "/dashboard", icon: HomeIcon, label: "Home" },
+    { href: "/checkin", icon: Clock, label: "Checkin" },
     { href: "/book", icon: CalendarArrowDown, label: "Book" },
   ],
   navbar2: [
@@ -28,7 +30,7 @@ const DATA = {
 
 export function DockBar() {
   return (
-    <div>
+    <div className="z-50">
       <TooltipProvider>
         <Dock direction="middle">
           {DATA.navbar.map((item) => (

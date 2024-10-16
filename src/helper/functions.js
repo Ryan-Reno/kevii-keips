@@ -15,6 +15,13 @@ export function formatTime(timeString) {
     return format(time, "h:mm a");
 }
 
+export function formatTimeShort(timeString) {
+    const time = parse(timeString, "HH:mm", new Date());
+
+    return { time: format(time, "h:mm"), period: format(time, "a") };
+}
+
+
 export function formatDateTime({ date, time }) {
     if (!date || !time) return "";
     const dateTimeString = `${date}T${time}:00`;
