@@ -7,8 +7,8 @@ function Dashboard() {
       {/* TODO: idk what is this page for */}
 
       <div className="fixed right-0 left-0 md:bottom-5 bottom-10">
-          <DockBar />
-        </div>
+        <DockBar />
+      </div>
     </div>
   );
 }

@@ -35,6 +35,13 @@ import { useToast } from "../hooks/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2, User } from "lucide-react";
+import {
+  formatDateTime,
+  formatDate,
+  formatTime,
+  convertToISO,
+  getFormattedDate,
+} from "../helper/functions";
 
 const MAX_DAILY_BOOKING = 5;
 const BOOKING_START_TIME = "06:00";
@@ -149,35 +156,6 @@ function Book() {
   const firstDate = dates.length > 0 ? dates[0] : null;
   const timeSlots = firstDate ? Object.keys(data[firstDate] || {}) : [];
 
-  function formatDate(dateString) {
-    const date = parseISO(dateString);
-    return format(date, "EEE, dd MMM");
-  }
-
-  function formatTime(timeString) {
-    const time = parse(timeString, "HH:mm", new Date());
-    return format(time, "h:mm a");
-  }
-
-  function formatDateTime({ date, time }) {
-    if (!date || !time) return "";
-    const dateTimeString = `${date}T${time}:00`;
-    const dateTime = new Date(parseISO(dateTimeString));
-    const options = {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    };
-    const formattedDate = new Intl.DateTimeFormat("en-GB", options).format(
-      dateTime
-    );
-
-    return formattedDate.replace(/(am|pm)/g, (match) => match.toUpperCase());
-  }
-
   function getColor(value, isDisabled) {
     if (isDisabled) {
       return "bg-gray-300";
@@ -200,11 +178,6 @@ function Book() {
       default:
         return "bg-gray-200";
     }
-  }
-
-  function convertToISO({ date, time }) {
-    const dateTimeString = `${date}T${time}:00`;
-    return dateTimeString;
   }
 
   async function bookSlot() {
@@ -274,19 +247,6 @@ function Book() {
     }
 
     return [0.5, 1, 1.5, 2, 2.5, 3].filter((slot) => slot <= availableHours);
-  }
-
-  function getFormattedDate() {
-    const today = new Date();
-
-    const options = {
-      weekday: "short",
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    };
-
-    return today.toLocaleDateString("en-GB", options);
   }
 
   return (

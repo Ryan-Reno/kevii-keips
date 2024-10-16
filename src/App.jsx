@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Calendar from "./pages/Calendar";
 import Book from "./pages/Book";
 import BookingsHistory from "./pages/BookingsHistory";
+import Checkin from "./pages/Checkin";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
           <Route
             path="/dashboard"
             element={<PrivateRoute element={<Dashboard />} />}
+          />
+          <Route
+            path="/checkin"
+            element={<PrivateRoute element={<Checkin />} />}
           />
           <Route
             path="/calendar"
