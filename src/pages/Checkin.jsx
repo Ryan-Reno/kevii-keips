@@ -287,7 +287,7 @@ function Checkin() {
           )}
         </div>
 
-        <div className="fixed right-0 left-0 md:bottom-5 bottom-5">
+        <div className="fixed right-0 left-0 md:bottom-5 bottom-5 z-50">
           <DockBar />
         </div>
       </div>
