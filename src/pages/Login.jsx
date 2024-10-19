@@ -146,7 +146,7 @@ function Login() {
       </div>
       <div className="hidden md:block bg-muted col-span-1">
         <img
-          src="/src/assets/ke7.jpg"
+          src="/images/ke7.jpg"
           alt="Image"
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />

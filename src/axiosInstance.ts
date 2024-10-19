@@ -16,6 +16,7 @@ const instance = axios.create({
   headers,
 });
 
-// http://localhost:8000/api
+// http://localhost:8000
+// https://kevii-gym-booking-api.vercel.app
 
 export default instance;

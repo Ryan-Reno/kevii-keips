@@ -9,10 +9,12 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
+import Book from "./pages/Book";
+import Checkin from "./pages/Checkin";
 
 function App() {
   return (
-    <>
+    <div className="font-sans bg-background">
       <div className="absolute right-0 top-4 left-0 md:relative">
         <Toaster />
       </div>
@@ -28,9 +30,14 @@ function App() {
             path="/dashboard"
             element={<PrivateRoute element={<Dashboard />} />}
           />
+          <Route
+            path="/checkin"
+            element={<PrivateRoute element={<Checkin />} />}
+          />
+          <Route path="/book" element={<PrivateRoute element={<Book />} />} />
         </Routes>
       </Router>
-    </>
+    </div>
   );
 }
 
