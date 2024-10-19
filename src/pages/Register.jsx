@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
 
@@ -11,24 +12,31 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
-
-  const handleLogin = async (event) => {
+  const handleRegistration = async (event) => {
     setIsLoggingIn(true);
 
     event.preventDefault();
 
     const emailRegex = /^[Ee]\d{7}(@u.nus.edu)?$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
     if (!emailRegex.test(email)) {
       toast({
         title: "Invalid Email",
-        description: "Please enter a valid NUS email or NUS ID.",
+        description: "Please enter a valid NUS email.",
+        variant: "destructive",
+      });
+
+      setIsLoggingIn(false);
+      return;
+    }
+
+    if (!passwordRegex.test(password)) {
+      toast({
+        title: "Invalid Password",
+        description: "Password must be at least 8 characters long and include letters and numbers.",
         variant: "destructive",
       });
 
@@ -43,8 +51,9 @@ function Register() {
     setEmail(formattedEmail);
 
     try {
-      const response = await axiosInstance.post("/api/auth/login", {
+      const response = await axiosInstance.post("/api/auth/register", {
         email: formattedEmail,
+        name: name,
         password: password,
       });
 
@@ -52,11 +61,11 @@ function Register() {
 
       setIsLoggingIn(false);
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         localStorage.setItem("kevii-gym-token", response.data.token);
 
         toast({
-          title: "Login Successful",
+          title: "Registration Successful",
           description: "You will be redirected shortly.",
           variant: "default",
         });
@@ -67,10 +76,10 @@ function Register() {
       }
     } catch (error) {
       setIsLoggingIn(false);
-      console.error("Login error:", error.response?.data || error.message);
+      console.error("Registration error:", error.response?.data || error.message);
       toast({
-        title: "Login Failed",
-        description: "Wrong email or password.",
+        title: "Registration Failed",
+        description: "Unknown Error",
         variant: "destructive",
       });
     }
@@ -83,10 +92,10 @@ function Register() {
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Register</h1>
             <p className="text-balance text-muted-foreground">
-              Use your NUS Email to Register
+              Use your NUS Email to create an account.
             </p>
           </div>
-          <form onSubmit={handleLogin} className="grid gap-4">
+          <form onSubmit={handleRegistration} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -110,23 +119,16 @@ function Register() {
                 />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Set Password</Label>
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? "text" : "password"}
+                  type="string"
                   placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={togglePasswordVisibility}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2"
-                >
-                </Button>
               </div>
             </div>
             <Button
@@ -139,7 +141,7 @@ function Register() {
               ) : (
                 <></>
               )}
-              Login
+              Create Account
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
