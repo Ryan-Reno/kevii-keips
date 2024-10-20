@@ -36,7 +36,8 @@ function Register() {
     if (!passwordRegex.test(password)) {
       toast({
         title: "Invalid Password",
-        description: "Password must be at least 8 characters long and include letters and numbers.",
+        description:
+          "Password must be at least 8 characters long and include letters and numbers.",
         variant: "destructive",
       });
 
@@ -76,7 +77,10 @@ function Register() {
       }
     } catch (error) {
       setIsLoggingIn(false);
-      console.error("Registration error:", error.response?.data || error.message);
+      console.error(
+        "Registration error:",
+        error.response?.data || error.message
+      );
       toast({
         title: "Registration Failed",
         description: "Unknown Error",
@@ -110,13 +114,13 @@ function Register() {
             <div className="grid gap-2">
               <Label htmlFor="name">Name</Label>
               <Input
-                  id="name"
-                  type="string"
-                  placeholder="Full Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+                id="name"
+                type="string"
+                placeholder="Full Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Set Password</Label>
