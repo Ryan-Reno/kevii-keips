@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
 
@@ -13,6 +13,11 @@ function Register() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   const handleRegistration = async (event) => {
     setIsLoggingIn(true);
@@ -91,12 +96,19 @@ function Register() {
 
   return (
     <div className="w-full md:grid md:grid-cols-2 grid-cols-1 min-h-screen">
+      <div className="hidden md:block bg-muted col-span-1">
+        <img
+          src="/images/ke7.jpg"
+          alt="Image"
+          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+        />
+      </div>
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Register</h1>
             <p className="text-balance text-muted-foreground">
-              Use your NUS Email to create an account.
+              Use your NUS Email or ID to create an account.
             </p>
           </div>
           <form onSubmit={handleRegistration} className="grid gap-4">
@@ -105,7 +117,7 @@ function Register() {
               <Input
                 id="email"
                 type="string"
-                placeholder="EXXXXXXX@u.nus.edu"
+                placeholder="NUSID@u.nus.edu or NUSID"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -123,16 +135,30 @@ function Register() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Set Password</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative">
-                <Input
-                  id="password"
-                  type="string"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4" />
+                    ) : (
+                      <Eye className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
               </div>
             </div>
             <Button
@@ -149,19 +175,12 @@ function Register() {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            Already have an NUS account?{" "}
+            Already have an account?{" "}
             <a href="/login" className="underline" disabled={isLoggingIn}>
               Login
             </a>
           </div>
         </div>
-      </div>
-      <div className="hidden md:block bg-muted col-span-1">
-        <img
-          src="/src/assets/ke7.jpg"
-          alt="Image"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
       </div>
     </div>
   );

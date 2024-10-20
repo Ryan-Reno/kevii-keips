@@ -83,7 +83,7 @@ function Login() {
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">Login</h1>
             <p className="text-balance text-muted-foreground">
-              Use your NUS ID to login
+              Use your NUS Email or ID to login
             </p>
           </div>
           <form onSubmit={handleLogin} className="grid gap-4">
