@@ -1,4 +1,4 @@
-import { CalendarArrowDown, Clock, HomeIcon } from "lucide-react";
+import { CalendarArrowDown, Clock, HomeIcon, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -16,6 +16,7 @@ const DATA = {
     { href: "/checkin", icon: Clock, label: "Checkin" },
     { href: "/book", icon: CalendarArrowDown, label: "Book" },
   ],
+  navbar2: [{ href: "/profile", icon: User, label: "Profile" }],
 };
 
 export function DockBar() {

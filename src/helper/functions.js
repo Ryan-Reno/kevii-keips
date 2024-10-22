@@ -63,6 +63,21 @@ export function formatDateTimeMix(datetime) {
 }
 
 
+export function formatDateTimeMixNoOffset(datetime) {
+    const dateTime = new Date(datetime);
+
+    const year = dateTime.getUTCFullYear();
+    const month = dateTime.toLocaleString('en-GB', { month: 'short', timeZone: 'UTC' });
+    const day = ('0' + dateTime.getUTCDate()).slice(-2);
+    const hour = ('0' + dateTime.getUTCHours()).slice(-2);
+    const minute = ('0' + dateTime.getUTCMinutes()).slice(-2);
+    const period = dateTime.getUTCHours() >= 12 ? 'PM' : 'AM';
+
+    const formattedDate = `${day} ${month} ${year}, ${hour}:${minute} ${period}`;
+
+    return formattedDate;
+}
+
 export function getFormattedDate() {
     const today = new Date();
 

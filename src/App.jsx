@@ -11,6 +11,7 @@ import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
 import Book from "./pages/Book";
 import Checkin from "./pages/Checkin";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -35,6 +36,10 @@ function App() {
             element={<PrivateRoute element={<Checkin />} />}
           />
           <Route path="/book" element={<PrivateRoute element={<Book />} />} />
+          <Route
+            path="/profile"
+            element={<PrivateRoute element={<Profile />} />}
+          />
         </Routes>
       </Router>
     </div>
