@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   getFormattedDate,
   getFormattedDateTime,
-  formatDateTimeMix,
+  formatDateTimeMixNoOffset,
 } from "../helper/functions";
 import {
   Dialog,
@@ -164,7 +164,7 @@ function Checkin() {
             </CardHeader>
             <CardContent>
               <p>
-                {formatDateTimeMix(
+                {formatDateTimeMixNoOffset(
                   new Date(checkinStatus?.checkIn?.checkInTime)
                 )}
               </p>
@@ -271,12 +271,15 @@ function Checkin() {
                 </CardHeader>
                 <CardContent>
                   <p>
-                    Check-in: {formatDateTimeMix(new Date(checkin.checkInTime))}
+                    Check-in:{" "}
+                    {formatDateTimeMixNoOffset(new Date(checkin.checkInTime))}
                   </p>
                   {checkin.checkOutTime && (
                     <p>
                       Check-out:{" "}
-                      {formatDateTimeMix(new Date(checkin.checkOutTime))}
+                      {formatDateTimeMixNoOffset(
+                        new Date(checkin.checkOutTime)
+                      )}
                     </p>
                   )}
                 </CardContent>
