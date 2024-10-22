@@ -62,18 +62,23 @@ export function formatDateTimeMix(datetime) {
     return formattedDate.replace(/(am|pm)/g, (match) => match.toUpperCase());
 }
 
-
 export function formatDateTimeMixNoOffset(datetime) {
     const dateTime = new Date(datetime);
 
     const year = dateTime.getUTCFullYear();
     const month = dateTime.toLocaleString('en-GB', { month: 'short', timeZone: 'UTC' });
     const day = ('0' + dateTime.getUTCDate()).slice(-2);
-    const hour = ('0' + dateTime.getUTCHours()).slice(-2);
-    const minute = ('0' + dateTime.getUTCMinutes()).slice(-2);
-    const period = dateTime.getUTCHours() >= 12 ? 'PM' : 'AM';
 
-    const formattedDate = `${day} ${month} ${year}, ${hour}:${minute} ${period}`;
+    let hour = dateTime.getUTCHours();
+    const period = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour ? hour : 12;
+
+    const minute = ('0' + dateTime.getUTCMinutes()).slice(-2);
+
+    const formattedHour = ('0' + hour).slice(-2);
+
+    const formattedDate = `${day} ${month} ${year}, ${formattedHour}:${minute} ${period}`;
 
     return formattedDate;
 }
@@ -94,15 +99,22 @@ export function getFormattedDate() {
 export function getFormattedDateTime() {
     const today = new Date();
 
-    const options = {
+    const optionsDate = {
         weekday: "short",
         day: "numeric",
         month: "short",
         year: "numeric",
+    };
+
+    const optionsTime = {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
     };
 
-    return today.toLocaleDateString("en-GB", options);
+    const formattedDate = today.toLocaleDateString("en-GB", optionsDate);
+    const formattedTime = today.toLocaleTimeString("en-GB", optionsTime).toUpperCase();
+
+    return `${formattedDate}, ${formattedTime}`;
 }
+

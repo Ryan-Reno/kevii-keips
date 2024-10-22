@@ -89,6 +89,7 @@ function Dashboard() {
       .finally(() => {
         setIsFetchingPopulation(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   useEffect(() => {
@@ -109,6 +110,7 @@ function Dashboard() {
       .finally(() => {
         setIsFetchingBooking(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 
   const isBookingEditable = (bookingDate) => {
@@ -207,14 +209,14 @@ function Dashboard() {
 
   return (
     <div className="md:py-5 md:px-7 py-5 px-4">
-      <div className="flex items-center justify-center md:mb-3 mb-3 flex-col">
+      <div className="flex items-center justify-center md:mb-5 mb-5 flex-col">
         <h1 className="text-2xl font-bold text-primary">Dashboard</h1>
         <h1 className="text-md font-bold text-muted-foreground">
           {getFormattedDate()}
         </h1>
       </div>
 
-      <Card className="mb-6">
+      <Card className="md:mb-6 mb-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />

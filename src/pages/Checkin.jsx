@@ -42,10 +42,7 @@ function Checkin() {
   const [isFetchingStatusCheckins, setIsFetchingStatusCheckins] =
     useState(true);
   const [refresh, setRefresh] = useState(0);
-
-  const handleQrResult = (result) => {
-    setScanResult(result);
-  };
+  const [correctQr, setCorrectQr] = useState(false);
 
   useEffect(() => {
     if (scanResult !== "") {
@@ -140,13 +137,43 @@ function Checkin() {
     setOpenQr(!openQr);
   };
 
+  const handleQrResult = (result) => {
+    setScanResult(result);
+
+    axiosInstance
+      .get(`/api/qrcode/${result}`)
+      .then((response) => {
+        const { active } = response.data;
+
+        if (active) {
+          setCorrectQr(true);
+        } else {
+          toast({
+            title: "Inactive QR Code",
+            description: "This code is inactive. Please try again.",
+            variant: "destructive",
+          });
+          setScanResult("");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Invalid QR Code",
+          description: "The scanned QR code is not valid.",
+          variant: "destructive",
+        });
+        setScanResult("");
+      });
+  };
+
   return (
     <>
       <div className="absolute right-0 top-4 left-0 md:relative z-50">
         <Toaster />
       </div>
       <div className="md:py-5 md:px-7 py-5 px-4 pb-20">
-        <div className="flex items-center justify-center md:mb-3 mb-3 flex-col">
+        <div className="flex items-center justify-center md:mb-5 mb-5 flex-col">
           <h1 className="text-2xl font-bold text-primary">Checkin</h1>
           <h1 className="text-md font-bold text-muted-foreground">
             {getFormattedDate()}
@@ -201,7 +228,7 @@ function Checkin() {
               </Dialog>
             </CardFooter>
           </Card>
-        ) : scanResult === "KEVII GYM: N3s9DZ91Q4hGt2AEVKSg4" ? (
+        ) : correctQr ? (
           <Card>
             <CardHeader>
               <CardTitle>Checking in?</CardTitle>

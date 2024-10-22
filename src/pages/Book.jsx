@@ -254,7 +254,7 @@ function Book() {
   return (
     <div className="md:py-5 md:px-7 py-5 px-4">
       <main>
-        <div className="flex items-center justify-center md:mb-3 mb-3 flex-col">
+        <div className="flex items-center justify-center md:mb-5 mb-5 flex-col">
           <h1 className="text-2xl font-bold text-primary">Book</h1>
           <h1 className="text-md font-bold text-muted-foreground">
             {getFormattedDate()}
