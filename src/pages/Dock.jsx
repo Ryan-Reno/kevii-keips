@@ -38,11 +38,11 @@ export function DockBar() {
                               variant: "secondary",
                               size: "icon",
                             }),
-                            "size-12 rounded-full"
+                            "size-12 rounded-full text-primary"
                           )
                         : cn(
                             buttonVariants({ variant: "ghost", size: "icon" }),
-                            "size-12 rounded-full"
+                            "size-12 rounded-full text-primary"
                           )
                     }`}
                   >
@@ -72,11 +72,11 @@ export function DockBar() {
                               variant: "secondary",
                               size: "icon",
                             }),
-                            "size-12 rounded-full"
+                            "size-12 rounded-full text-primary"
                           )
                         : cn(
                             buttonVariants({ variant: "ghost", size: "icon" }),
-                            "size-12 rounded-full"
+                            "size-12 rounded-full text-primary"
                           )
                     }`}
                   >

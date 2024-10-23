@@ -14,17 +14,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Loader2, Calendar, Edit, Trash2 } from "lucide-react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import { Users, Loader2, Calendar, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -35,26 +25,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { format, addHours, parseISO, isBefore, addMinutes } from "date-fns";
-
-const BOOKING_START_TIME = "06:00";
-const BOOKING_END_TIME = "23:00";
-
-const generateTimeSlots = () => {
-  const slots = [];
-  let currentTime = parseISO(`2024-01-01T${BOOKING_START_TIME}`);
-  const endTime = parseISO(`2024-01-01T${BOOKING_END_TIME}`);
-
-  while (isBefore(currentTime, endTime)) {
-    slots.push(format(currentTime, "HH:mm"));
-    currentTime = addMinutes(currentTime, 30);
-  }
-  slots.push(BOOKING_END_TIME);
-  return slots;
-};
-
-const TIME_SLOTS = generateTimeSlots();
+import { addHours, isBefore } from "date-fns";
 
 function Dashboard() {
   const { toast } = useToast();
@@ -67,9 +38,6 @@ function Dashboard() {
   const [bookings, setBookings] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [selectedBooking, setSelectedBooking] = useState(null);
-  const [selectedDuration, setSelectedDuration] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
 
   useEffect(() => {
     setIsFetchingPopulation(true);
@@ -130,50 +98,6 @@ function Dashboard() {
     return before;
   };
 
-  function editBooking(bookingId) {
-    if (bookingId && selectedDuration && selectedTime) {
-      setIsUpdating(true);
-
-      const [hours, minutes] = selectedTime.split(":");
-      const bookingDate = new Date(selectedBooking.date);
-      const newDate = new Date(
-        Date.UTC(
-          bookingDate.getUTCFullYear(),
-          bookingDate.getUTCMonth(),
-          bookingDate.getUTCDate(),
-          parseInt(hours),
-          parseInt(minutes)
-        )
-      );
-
-      console.log(newDate, selectedTime, selectedDuration);
-
-      axiosInstance
-        .patch(`/api/bookings/${bookingId}`, {
-          duration: selectedDuration,
-          date: newDate.toISOString(),
-        })
-        .then(() => {
-          toast({
-            title: "Success",
-            description: "Booking updated successfully.",
-          });
-          setRefresh((prev) => prev + 1);
-        })
-        .catch((error) => {
-          toast({
-            title: "Error",
-            description:
-              error.response?.data?.error || "Failed to update booking",
-            variant: "destructive",
-          });
-        })
-        .finally(() => {
-          setIsUpdating(false);
-        });
-    }
-  }
-
   function deleteBooking(bookingId) {
     if (bookingId) {
       setIsUpdating(true);
@@ -199,13 +123,6 @@ function Dashboard() {
         });
     }
   }
-
-  const handleBookingSelect = (booking) => {
-    setSelectedBooking(booking);
-    const timeString = booking.date.split("T")[1].slice(0, 5);
-    setSelectedTime(timeString);
-    setSelectedDuration(booking.duration);
-  };
 
   return (
     <div className="md:py-5 md:px-7 py-5 px-4">
@@ -235,7 +152,7 @@ function Dashboard() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />
@@ -270,92 +187,6 @@ function Dashboard() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="flex gap-2 absolute top-5 right-0">
-                      <Drawer>
-                        <DrawerTrigger asChild>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => handleBookingSelect(booking)}
-                            disabled={!isEditable}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                        </DrawerTrigger>
-                        <DrawerContent>
-                          <div className="mx-auto w-full max-w-sm">
-                            <DrawerHeader>
-                              <DrawerTitle>Edit Booking</DrawerTitle>
-                              <DrawerDescription>
-                                Original:{" "}
-                                {formatDateTimeMixNoOffset(booking.date)}
-                              </DrawerDescription>
-                            </DrawerHeader>
-                            <div className="p-4 space-y-4">
-                              <div>
-                                <h4 className="mb-2 font-medium">
-                                  Select Time
-                                </h4>
-                                <ToggleGroup
-                                  type="single"
-                                  value={selectedTime}
-                                  onValueChange={setSelectedTime}
-                                  className="grid grid-cols-4 gap-2"
-                                >
-                                  {TIME_SLOTS.map((time) => (
-                                    <ToggleGroupItem
-                                      key={time}
-                                      value={time}
-                                      className="text-sm"
-                                    >
-                                      {time}
-                                    </ToggleGroupItem>
-                                  ))}
-                                </ToggleGroup>
-                              </div>
-                              <div>
-                                <h4 className="mb-2 font-medium">
-                                  Select Duration
-                                </h4>
-                                <ToggleGroup
-                                  type="single"
-                                  value={selectedDuration}
-                                  onValueChange={setSelectedDuration}
-                                  className="grid grid-cols-3 gap-2"
-                                >
-                                  {[0.5, 1, 1.5, 2, 2.5, 3].map((duration) => (
-                                    <ToggleGroupItem
-                                      key={duration}
-                                      value={duration}
-                                    >
-                                      {duration}h
-                                    </ToggleGroupItem>
-                                  ))}
-                                </ToggleGroup>
-                              </div>
-                            </div>
-                            <DrawerFooter>
-                              <Button
-                                onClick={() => editBooking(booking._id)}
-                                disabled={
-                                  isUpdating ||
-                                  !selectedDuration ||
-                                  !selectedTime
-                                }
-                              >
-                                {isUpdating ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  "Save Changes"
-                                )}
-                              </Button>
-                              <DrawerClose asChild>
-                                <Button variant="outline">Cancel</Button>
-                              </DrawerClose>
-                            </DrawerFooter>
-                          </div>
-                        </DrawerContent>
-                      </Drawer>
-
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button

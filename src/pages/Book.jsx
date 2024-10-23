@@ -43,6 +43,7 @@ import {
   getFormattedDate,
   formatTimeShort,
 } from "../helper/functions";
+import { useTheme } from "@/components/theme-provider";
 
 const MAX_DAILY_BOOKING = 5;
 const BOOKING_START_TIME = "06:00";
@@ -182,6 +183,30 @@ function Book() {
     }
   }
 
+  function getColorDark(value, isDisabled) {
+    if (isDisabled) {
+      return "bg-gray-700";
+    }
+    switch (value) {
+      case 0:
+        return "bg-neutral-900";
+      case 1:
+        return "bg-blue-800";
+      case 2:
+        return "bg-teal-800";
+      case 3:
+        return "bg-yellow-800";
+      case 4:
+        return "bg-orange-800";
+      case 5:
+        return "bg-red-800";
+      case 100:
+        return "bg-green-800";
+      default:
+        return "bg-gray-800";
+    }
+  }
+
   async function bookSlot() {
     const date = convertToISO(selectedTime);
     const duration = selectedTimeSlot;
@@ -251,6 +276,14 @@ function Book() {
     return [0.5, 1, 1.5, 2, 2.5, 3].filter((slot) => slot <= availableHours);
   }
 
+  const { theme } = useTheme();
+
+  const getThemeAwareColor = (value, isDisabled) => {
+    return theme === "dark" || theme === "system"
+      ? getColorDark(value, isDisabled)
+      : getColor(value, isDisabled);
+  };
+
   return (
     <div className="md:py-5 md:px-7 py-5 px-4">
       <main>
@@ -271,7 +304,7 @@ function Book() {
             <div className="sticky z-0">
               <Table>
                 <TableHeader className="">
-                  <TableRow>
+                  <TableRow className="dark:border-neutral-600">
                     <TableHead className="w-24">Time</TableHead>
                     {loading
                       ? weekDates.map((date, index) => (
@@ -293,13 +326,16 @@ function Book() {
                 <TableBody>
                   {loading
                     ? times.map((time, rowIndex) => (
-                        <TableRow key={rowIndex}>
+                        <TableRow
+                          key={rowIndex}
+                          className="dark:border-neutral-600"
+                        >
                           <TableCell
                             key={`time-${rowIndex}`}
                             className={`md:w-24 w-18 md:text-md text-sm ${
                               formatTimeShort(time).period === "PM"
-                                ? "bg-red-400"
-                                : "bg-blue-400"
+                                ? "bg-red-400 dark:bg-red-800 text-primary"
+                                : "bg-blue-400 dark:bg-blue-900 text-primary"
                             }`}
                           >
                             <span className="md:hidden block">
@@ -317,12 +353,15 @@ function Book() {
                         </TableRow>
                       ))
                     : timeSlots.map((time) => (
-                        <TableRow key={time}>
+                        <TableRow
+                          key={time}
+                          className="dark:border-neutral-600"
+                        >
                           <TableCell
                             className={`md:w-24 w-18 md:text-md text-sm ${
                               formatTimeShort(time).period === "PM"
-                                ? "bg-red-400"
-                                : "bg-blue-400"
+                                ? "bg-red-400 dark:bg-red-800 text-primary"
+                                : "bg-blue-400 dark:bg-blue-900 text-primary"
                             }`}
                           >
                             <span className="md:hidden block">
@@ -354,7 +393,9 @@ function Book() {
                                           cellValue < MAX_DAILY_BOOKING
                                             ? "cursor-pointer"
                                             : "cursor-not-allowed"
-                                        } ${getColor(cellValue)}`}
+                                        } ${getThemeAwareColor(
+                                          cellValue
+                                        )} text-foreground`}
                                       >
                                         {cellValue}
                                       </TableCell>
@@ -367,7 +408,7 @@ function Book() {
                                             Set your booking
                                           </DrawerDescription>
                                         </DrawerHeader>
-                                        <div className="p-4 flex flex-col gap-3">
+                                        <div className="p-4 flex flex-col gap-3 text-foreground">
                                           <h5>
                                             {formatDateTime({ date, time })}
                                           </h5>
@@ -471,9 +512,9 @@ function Book() {
                                   </Drawer>
                                 ) : (
                                   <TableCell
-                                    className={`w-24 text-center cursor-not-allowed ${getColor(
+                                    className={`w-24 text-center cursor-not-allowed ${getThemeAwareColor(
                                       cellValue
-                                    )}`}
+                                    )} text-primary text-foreground`}
                                   >
                                     <div>
                                       {cellValue === 100 ? (

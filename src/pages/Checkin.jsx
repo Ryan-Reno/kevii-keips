@@ -258,13 +258,11 @@ function Checkin() {
               {openQr ? "Close" : "Checkin"}
             </Button>
 
-            {!openQr &&
-              scanResult !== "KEVII GYM: N3s9DZ91Q4hGt2AEVKSg4" &&
-              scanResult !== "" && (
-                <p className="pt-2 text-red-700">
-                  Invalid QR Code. Please Try Again
-                </p>
-              )}
+            {!openQr && correctQr && scanResult !== "" && (
+              <p className="pt-2 text-red-700">
+                Invalid QR Code. Please Try Again
+              </p>
+            )}
 
             <div className="pt-3">
               {openQr && <QrReader onResult={handleQrResult} />}
@@ -273,7 +271,9 @@ function Checkin() {
         )}
 
         <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-4">Past Check-ins</h2>
+          <h2 className="text-xl font-semibold mb-4 text-primary">
+            Past Check-ins
+          </h2>
           {isFetchingStatusCheckins ? (
             Array.from({ length: 3 }).map((_, index) => (
               <Card key={index} className="mb-4">
