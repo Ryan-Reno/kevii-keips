@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { DockBar } from "./Dock";
-import { getFormattedDate } from "../helper/functions";
+import { capitalizeFirstLetter, getFormattedDate } from "../helper/functions";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Moon, Sun, LogOut } from "lucide-react";
+import { Moon, Sun, LogOut, SunMoon } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import {
   DropdownMenu,
@@ -15,13 +15,17 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import DemeritPointsDisplay from "./DemeritPointsDisplay";
 
 function Profile() {
   const { setTheme } = useTheme();
+  const theme = localStorage.getItem("kevii-gym-booking-ui-theme");
 
   const { toast } = useToast();
   const [user, setUser] = useState({});
   const [isFetchingStatus, setIsFetchingStatus] = useState(false);
+  const [demeritPoints, setDemeritPoints] = useState({});
+  const [isFetchingDemeritPoints, setIsFetchingDemeritPoints] = useState(false);
 
   useEffect(() => {
     setIsFetchingStatus(true);
@@ -41,6 +45,28 @@ function Profile() {
       .finally(() => {
         setIsFetchingStatus(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setIsFetchingDemeritPoints(true);
+    axiosInstance
+      .get("/api/demerit/my-demerits")
+      .then((response) => {
+        setDemeritPoints(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch demerit points",
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setIsFetchingDemeritPoints(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getInitials = (name) => {
@@ -64,78 +90,95 @@ function Profile() {
           {getFormattedDate()}
         </h1>
       </div>
+      <main className="mb-20">
+        <Card className="w-full max-w-md mx-auto">
+          <CardHeader className="flex flex-col items-center space-y-4">
+            {isFetchingStatus ? (
+              <Skeleton className="w-20 h-20 rounded-full" />
+            ) : (
+              <Avatar className="w-20 h-20">
+                <AvatarFallback className="text-lg">
+                  {getInitials(user.name || "")}
+                </AvatarFallback>
+              </Avatar>
+            )}
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {isFetchingStatus ? (
+              <>
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </>
+            ) : (
+              <>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Name
+                  </p>
+                  <p className="text-lg font-medium">{user.name}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Email
+                  </p>
+                  <p className="text-lg font-medium">{user.email}</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  className="w-full"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </Button>
+              </>
+            )}
+          </CardContent>
+        </Card>
 
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader className="flex flex-col items-center space-y-4">
-          {isFetchingStatus ? (
-            <Skeleton className="w-20 h-20 rounded-full" />
-          ) : (
-            <Avatar className="w-20 h-20">
-              <AvatarFallback className="text-lg">
-                {getInitials(user.name || "")}
-              </AvatarFallback>
-            </Avatar>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isFetchingStatus ? (
-            <>
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-3/4" />
-            </>
-          ) : (
-            <>
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Name
-                </p>
-                <p className="text-lg font-medium">{user.name}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Email
-                </p>
-                <p className="text-lg font-medium">{user.email}</p>
-              </div>
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={handleLogout}
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
-              </Button>
-            </>
-          )}
-        </CardContent>
-      </Card>
+        <DemeritPointsDisplay
+          demeritPoints={demeritPoints}
+          isLoading={isFetchingDemeritPoints}
+        />
 
-      <Card className="mt-5 w-full max-w-md mx-auto">
-        <CardHeader>Theme</CardHeader>
-        <CardContent>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                Light
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                Dark
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                System
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </CardContent>
-      </Card>
-
+        <Card className="mt-5 w-full max-w-md mx-auto">
+          <CardHeader>Theme</CardHeader>
+          <CardContent>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full flex gap-3"
+                  size="icon"
+                >
+                  {theme === "light" ? (
+                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+                  ) : theme === "dark" ? (
+                    <Moon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+                  ) : (
+                    <SunMoon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all" />
+                  )}
+                  <span className="sr-only">Toggle theme</span>
+                  <p className="text-primary text-md">
+                    {capitalizeFirstLetter(theme)}
+                  </p>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </CardContent>
+        </Card>
+      </main>
       <div className="fixed right-0 left-0 md:bottom-5 bottom-5 z-50">
         <DockBar />
       </div>

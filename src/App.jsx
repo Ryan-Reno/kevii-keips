@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -13,10 +14,25 @@ import Book from "./pages/Book";
 import Checkin from "./pages/Checkin";
 import Profile from "./pages/Profile";
 import { ThemeProvider } from "@/components/theme-provider";
+import axiosInstance from "./axiosInstance";
 
 function App() {
+  useEffect(() => {
+    axiosInstance
+      .post("/api/demerit/check")
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider
+      defaultTheme="system"
+      storageKey="kevii-gym-booking-ui-theme"
+    >
       <div className="font-sans bg-background min-h-screen">
         <div className="absolute right-0 top-4 left-0 md:relative">
           <Toaster />

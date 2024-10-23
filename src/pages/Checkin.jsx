@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Camera, CameraOff, Loader2 } from "lucide-react";
 import { Toaster } from "@/components/ui/toaster";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -254,7 +254,12 @@ function Checkin() {
           </Card>
         ) : (
           <div>
-            <Button onClick={openQRFunc} className="w-full">
+            <Button onClick={openQRFunc} className="w-full flex gap-2">
+              {openQr ? (
+                <CameraOff className="h-4 w-4" />
+              ) : (
+                <Camera className="h-4 w-4" />
+              )}
               {openQr ? "Close" : "Checkin"}
             </Button>
 
@@ -270,7 +275,7 @@ function Checkin() {
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 mb-20">
           <h2 className="text-xl font-semibold mb-4 text-primary">
             Past Check-ins
           </h2>
