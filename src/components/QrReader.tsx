@@ -56,7 +56,7 @@ const QrReader = ({ onResult }) => {
   }, [qrOn]);
 
   return (
-    <div className="w-full h-[50%] flex flex-col items-center relative">
+    <div className="w-full h-screen flex flex-col items-center relative">
       <video ref={videoEl} className="w-[100%] h-[50%] object-cover"></video>
       <div ref={qrBoxEl} className="w-full absolute">
         <img

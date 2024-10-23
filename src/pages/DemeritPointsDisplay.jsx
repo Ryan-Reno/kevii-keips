@@ -30,6 +30,15 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
 
   const { totalPoints = 0, demerits = [] } = demeritPoints || {};
 
+  let suspensionMessage = "";
+  if (totalPoints >= 15) {
+    suspensionMessage = "Your account will be suspended for 30 days.";
+  } else if (totalPoints >= 10) {
+    suspensionMessage = "Your account will be suspended for 14 days.";
+  } else if (totalPoints >= 5) {
+    suspensionMessage = "Your account will be suspended for 7 days.";
+  }
+
   return (
     <Card className="mt-5 w-full max-w-md mx-auto">
       <CardHeader>
@@ -37,9 +46,9 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
           Demerit Points
           <Badge
             variant={
-              totalPoints >= 3 && totalPoints < 5
+              totalPoints >= 5 && totalPoints <= 10
                 ? "caution"
-                : totalPoints >= 5
+                : totalPoints >= 10
                 ? "destructive"
                 : "secondary"
             }
@@ -50,13 +59,13 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {totalPoints >= 3 && (
-          <Alert variant={totalPoints >= 5 ? "destructive" : "caution"}>
+        {totalPoints >= 5 && (
+          <Alert variant={totalPoints >= 10 ? "destructive" : "caution"}>
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Warning</AlertTitle>
             <AlertDescription>
-              You have accumulated {totalPoints} demerit points. Users with 5 or
-              more points may face booking restrictions.
+              You have accumulated {totalPoints} demerit points.{" "}
+              {suspensionMessage}
             </AlertDescription>
           </Alert>
         )}

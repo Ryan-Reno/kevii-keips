@@ -5,9 +5,9 @@ import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardTitle, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Moon, Sun, LogOut, SunMoon } from "lucide-react";
+import { Moon, Sun, LogOut, SunMoon, AlertTriangle } from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import {
   DropdownMenu,
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DemeritPointsDisplay from "./DemeritPointsDisplay";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function Profile() {
   const { setTheme } = useTheme();
@@ -176,6 +177,100 @@ function Profile() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-5 w-full max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle className="text-lg font-bold">
+              Gym Rules & Demerit System
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h2 className="font-semibold text-md pb-1">All Systems:</h2>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li>
+                  Max users in the gym: <span className="font-bold">5</span>
+                </li>
+                <li>
+                  Max duration per session:{" "}
+                  <span className="font-bold">3 hours</span>
+                </li>
+                <li>
+                  Max booking slots per day:{" "}
+                  <span className="font-bold">3</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="font-semibold text-md pb-1">Demerit System:</h2>
+              <ul className="list-disc list-inside text-sm space-y-1">
+                <li>
+                  5 points - Suspension:{" "}
+                  <span className="font-bold">7 days</span>
+                </li>
+                <li>
+                  10 points - Suspension:{" "}
+                  <span className="font-bold">14 days</span>
+                </li>
+                <li>
+                  15 points - Suspension:{" "}
+                  <span className="font-bold">30 days</span>
+                </li>
+                <li>
+                  Max demerit points before ban:{" "}
+                  <span className="font-bold">20 points</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Alert about suspension */}
+            <Alert variant="caution">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Important:</AlertTitle>
+              <AlertDescription>
+                Accumulating 20 demerit points will result in a permanent ban
+                from the gym.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+
+        <Card className="mt-5 w-full max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle className="text-lg font-bold">
+              KEVII Gym Booking App Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="text-sm">
+              <p>This app was created by:</p>
+              <ul className="list-disc list-inside pl-4">
+                <li>
+                  <a
+                    href="https://www.linkedin.com/in/brians-tjipto-a25850153/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold hover:underline"
+                  >
+                    Brians Tjipto
+                  </a>
+                </li>
+                <li>Lutfir</li>
+                <li>Travis</li>
+              </ul>
+
+              <p className="mt-2">
+                Made for <span className="font-semibold">KEVII</span> to
+                simplify gym bookings and management.
+              </p>
+
+              <p className="mt-4">
+                Copyright &copy; 2024 Brians Tjipto. All rights reserved.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </main>

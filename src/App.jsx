@@ -28,6 +28,17 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    axiosInstance
+      .post("/api/suspend/auto-check")
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <ThemeProvider
       defaultTheme="system"
