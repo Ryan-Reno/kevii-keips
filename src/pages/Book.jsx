@@ -565,7 +565,7 @@ function Book() {
           </div>
         </div>
 
-        <Card className="w-full max-w-md mx-auto mt-10 mb-20">
+        <Card className="w-full max-w-md mx-auto mt-6 mb-20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BookMarked className="h-5 w-5" />
