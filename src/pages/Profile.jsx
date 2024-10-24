@@ -191,6 +191,12 @@ function Profile() {
               <h2 className="font-semibold text-md pb-1">All Systems:</h2>
               <ul className="list-disc list-inside text-sm space-y-1 pl-2">
                 <li>
+                  Gym opening: <span className="font-bold">6:00 AM</span>
+                </li>
+                <li>
+                  Gym closing: <span className="font-bold">11:00 PM</span>
+                </li>
+                <li>
                   Max users in the gym: <span className="font-bold">5</span>
                 </li>
                 <li>
