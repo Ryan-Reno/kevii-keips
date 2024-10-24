@@ -5,8 +5,8 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+// import Login from "./pages/Login";
+// import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { PrivateRoute, AuthRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
@@ -15,6 +15,8 @@ import Checkin from "./pages/Checkin";
 import Profile from "./pages/Profile";
 import { ThemeProvider } from "@/components/theme-provider";
 import axiosInstance from "./axiosInstance";
+import LoginPilot from "./pages/LoginPilot";
+import RegisterPilot from "./pages/RegisterPilot";
 
 function App() {
   useEffect(() => {
@@ -51,10 +53,18 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<AuthRoute element={<Login />} />} />
+            {/* <Route path="/login" element={<AuthRoute element={<Login />} />} />
             <Route
               path="/register"
               element={<AuthRoute element={<Register />} />}
+            /> */}
+            <Route
+              path="/login"
+              element={<AuthRoute element={<LoginPilot />} />}
+            />
+            <Route
+              path="/register"
+              element={<AuthRoute element={<RegisterPilot />} />}
             />
             <Route
               path="/dashboard"

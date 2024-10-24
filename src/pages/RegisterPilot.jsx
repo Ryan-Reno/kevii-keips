@@ -2,22 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
 
-function Register() {
+function RegisterPilot() {
   const { toast } = useToast();
 
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   const handleRegistration = async (event) => {
     setIsLoggingIn(true);
@@ -25,24 +19,11 @@ function Register() {
     event.preventDefault();
 
     const emailRegex = /^[Ee]\d{7}(@u.nus.edu)?$/;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/;
 
     if (!emailRegex.test(email)) {
       toast({
         title: "Invalid Email",
         description: "Please enter a valid NUS email.",
-        variant: "destructive",
-      });
-
-      setIsLoggingIn(false);
-      return;
-    }
-
-    if (!passwordRegex.test(password)) {
-      toast({
-        title: "Invalid Password",
-        description:
-          "Password must be at least 8 characters long and include letters and numbers.",
         variant: "destructive",
       });
 
@@ -60,7 +41,7 @@ function Register() {
       const response = await axiosInstance.post("/api/auth/register", {
         email: formattedEmail,
         name: name,
-        password: password,
+        password: "Test123!",
       });
 
       console.log(response.data);
@@ -137,33 +118,6 @@ function Register() {
                 required
               />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <Button
-                    type="button"
-                    variant="link"
-                    onClick={togglePasswordVisibility}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
-                    ) : (
-                      <Eye className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-            </div>
             <Button
               type="submit"
               className="w-full flex gap-3 items-center justify-center"
@@ -189,4 +143,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default RegisterPilot;
