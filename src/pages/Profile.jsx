@@ -7,7 +7,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Moon, Sun, LogOut, SunMoon, AlertTriangle } from "lucide-react";
+import {
+  Moon,
+  Sun,
+  LogOut,
+  SunMoon,
+  AlertTriangle,
+  Bolt,
+  Info,
+} from "lucide-react";
 import { useTheme } from "@/components/theme-provider";
 import {
   DropdownMenu,
@@ -143,7 +151,12 @@ function Profile() {
         />
 
         <Card className="mt-5 w-full max-w-md mx-auto">
-          <CardHeader>Theme</CardHeader>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <SunMoon className="h-5 w-5" />
+              Theme
+            </CardTitle>
+          </CardHeader>
           <CardContent>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -182,7 +195,8 @@ function Profile() {
 
         <Card className="mt-5 w-full max-w-md mx-auto">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">
+            <CardTitle className="flex items-center gap-2">
+              <Bolt className="h-5 w-5" />
               Gym Rules & Demerit System
             </CardTitle>
           </CardHeader>
@@ -246,7 +260,8 @@ function Profile() {
 
         <Card className="mt-5 w-full max-w-md mx-auto">
           <CardHeader>
-            <CardTitle className="text-lg font-bold">
+            <CardTitle className="flex items-center gap-2">
+              <Info className="h-4 w-4" />
               KEVII Gym Booking App Information
             </CardTitle>
           </CardHeader>

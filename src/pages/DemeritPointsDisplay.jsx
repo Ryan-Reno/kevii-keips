@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Milestone } from "lucide-react";
 import { formatDateTimeMix } from "../helper/functions";
 
 const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
@@ -12,7 +12,10 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
       <Card className="mt-5 w-full max-w-md mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            Demerit Points
+            <div className="flex items-center gap-2">
+              <Milestone className="h-5 w-5" />
+              Demerit Points
+            </div>
             <Skeleton className="h-8 w-24" />
           </CardTitle>
         </CardHeader>
@@ -43,7 +46,10 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
     <Card className="mt-5 w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          Demerit Points
+          <div className="flex items-center gap-2">
+            <Milestone className="h-5 w-5" />
+            Demerit Points
+          </div>
           <Badge
             variant={
               totalPoints >= 5 && totalPoints <= 10
