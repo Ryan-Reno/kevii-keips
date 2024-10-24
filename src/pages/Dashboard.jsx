@@ -133,7 +133,7 @@ function Dashboard() {
         </h1>
       </div>
 
-      <Card className="md:mb-6 mb-6">
+      <Card className="md:mb-6 mb-6 max-w-md mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -152,7 +152,7 @@ function Dashboard() {
         </CardContent>
       </Card>
 
-      <Card className="mb-20">
+      <Card className="mb-20 max-w-md mx-auto">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="h-5 w-5" />

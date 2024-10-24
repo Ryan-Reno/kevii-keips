@@ -189,7 +189,7 @@ function Profile() {
           <CardContent className="space-y-4">
             <div>
               <h2 className="font-semibold text-md pb-1">All Systems:</h2>
-              <ul className="list-disc list-inside text-sm space-y-1">
+              <ul className="list-disc list-inside text-sm space-y-1 pl-2">
                 <li>
                   Max users in the gym: <span className="font-bold">5</span>
                 </li>
@@ -206,7 +206,7 @@ function Profile() {
 
             <div>
               <h2 className="font-semibold text-md pb-1">Demerit System:</h2>
-              <ul className="list-disc list-inside text-sm space-y-1">
+              <ul className="list-disc list-inside text-sm space-y-1 pl-2">
                 <li>
                   5 points - Suspension:{" "}
                   <span className="font-bold">7 days</span>
@@ -253,7 +253,7 @@ function Profile() {
                     href="https://www.linkedin.com/in/brians-tjipto-a25850153/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-semibold hover:underline"
+                    className="font-semibold hover:underline-offset-2 underline transition-all ease-in-out duration-200"
                   >
                     Brians Tjipto
                   </a>

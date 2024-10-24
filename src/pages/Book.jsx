@@ -9,7 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format, parseISO, parse, addDays } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  format,
+  parseISO,
+  parse,
+  addDays,
+  isBefore,
+  addMinutes,
+} from "date-fns";
 import {
   Drawer,
   DrawerClose,
@@ -34,7 +42,7 @@ import {
 import { useToast } from "../hooks/use-toast";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2, User } from "lucide-react";
+import { BookMarked, Loader2, User } from "lucide-react";
 import {
   formatDateTime,
   formatDate,
@@ -48,6 +56,7 @@ import { useTheme } from "@/components/theme-provider";
 const MAX_DAILY_BOOKING = 5;
 const BOOKING_START_TIME = "06:00";
 const BOOKING_END_TIME = "23:00";
+const GRACE_PERIOD_MINUTES = 15;
 
 const times = [
   // "00:00",
@@ -102,6 +111,7 @@ const times = [
 
 function Book() {
   const { toast } = useToast();
+  const { theme } = useTheme();
 
   const [data, setData] = useState({});
   const [selectedTime, setSelectedTime] = useState({});
@@ -110,6 +120,12 @@ function Book() {
 
   const [loading, setLoading] = useState(false);
   const [isBooking, setIsBooking] = useState(false);
+
+  const getThemeAwareColor = (value, isDisabled) => {
+    return theme === "dark" || theme === "system"
+      ? getColorDark(value, isDisabled)
+      : getColor(value, isDisabled);
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -207,6 +223,17 @@ function Book() {
     }
   }
 
+  const legendItems = [
+    { value: 0, label: "Available" },
+    { value: 1, label: "1 Booking" },
+    { value: 2, label: "2 Bookings" },
+    { value: 3, label: "3 Bookings" },
+    { value: 4, label: "4 Bookings" },
+    { value: 5, label: "Full" },
+    { value: 100, label: "Your Booking" },
+    { value: true, label: "Disabled" },
+  ];
+
   async function bookSlot() {
     const date = convertToISO(selectedTime);
     const duration = selectedTimeSlot;
@@ -276,12 +303,16 @@ function Book() {
     return [0.5, 1, 1.5, 2, 2.5, 3].filter((slot) => slot <= availableHours);
   }
 
-  const { theme } = useTheme();
+  const isTimeSlotDisabled = (date, time) => {
+    const now = new Date();
+    const slotDateTime = parseISO(`${date}T${time}`);
+    const cutoffTime = addMinutes(now, -GRACE_PERIOD_MINUTES);
 
-  const getThemeAwareColor = (value, isDisabled) => {
-    return theme === "dark" || theme === "system"
-      ? getColorDark(value, isDisabled)
-      : getColor(value, isDisabled);
+    if (format(now, "yyyy-MM-dd") === date) {
+      return isBefore(slotDateTime, cutoffTime);
+    }
+
+    return isBefore(slotDateTime, now);
   };
 
   return (
@@ -292,11 +323,6 @@ function Book() {
           <h1 className="text-md font-bold text-muted-foreground">
             {getFormattedDate()}
           </h1>
-        </div>
-
-        {/* DockBar */}
-        <div className="fixed right-0 left-0 md:bottom-5 bottom-5 z-50">
-          <DockBar />
         </div>
 
         <div className="flex justify-center ">
@@ -374,13 +400,15 @@ function Book() {
 
                           {dates.map((date) => {
                             const cellValue = data[date][time];
+                            const isDisabled = isTimeSlotDisabled(date, time);
 
                             return (
                               <td
                                 key={date + time}
                                 className="w-24 text-center"
                               >
-                                {cellValue < MAX_DAILY_BOOKING ? (
+                                {!isDisabled &&
+                                cellValue < MAX_DAILY_BOOKING ? (
                                   <Drawer>
                                     <DrawerTrigger
                                       asChild
@@ -513,8 +541,9 @@ function Book() {
                                 ) : (
                                   <TableCell
                                     className={`w-24 text-center cursor-not-allowed ${getThemeAwareColor(
-                                      cellValue
-                                    )} text-primary text-foreground`}
+                                      cellValue,
+                                      isDisabled
+                                    )} text-primary`}
                                   >
                                     <div>
                                       {cellValue === 100 ? (
@@ -534,6 +563,57 @@ function Book() {
               </Table>
             </div>
           </div>
+        </div>
+
+        <Card className="w-full max-w-md mx-auto mt-10 mb-20">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BookMarked className="h-5 w-5" />
+              Legend
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="grid md:grid-cols-3 grid-cols-2 items-center justify-center gap-4 flex-wrap">
+                {legendItems.map((item) => (
+                  <div key={item.value} className="flex items-center gap-2">
+                    <div
+                      className={`w-6 h-6 rounded flex items-center justify-center ${getThemeAwareColor(
+                        item.value
+                      )}`}
+                    >
+                      {item.value === 100 && (
+                        <User className="w-4 h-4 text-primary" />
+                      )}
+                      {item.value !== 100 && (
+                        <span className="text-xs text-primary">
+                          {item.value}
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center justify-center gap-4 pt-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-blue-400 dark:bg-blue-900 rounded" />
+                  <span className="text-sm text-muted-foreground">AM</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-red-400 dark:bg-red-800 rounded" />
+                  <span className="text-sm text-muted-foreground">PM</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* DockBar */}
+        <div className="fixed right-0 left-0 md:bottom-5 bottom-5 z-50">
+          <DockBar />
         </div>
       </main>
     </div>
