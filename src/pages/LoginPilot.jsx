@@ -75,7 +75,7 @@ function LoginPilot() {
             variant: "destructive",
           });
         } else {
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise((resolve) => setTimeout(resolve, 1500));
         }
       }
     }
