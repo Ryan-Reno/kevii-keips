@@ -14,7 +14,6 @@ function LoginPilot() {
 
   const handleLogin = async (event) => {
     setIsLoggingIn(true);
-
     event.preventDefault();
 
     const emailRegex = /^[Ee]\d{7}(@u.nus.edu)?$/;
@@ -36,37 +35,49 @@ function LoginPilot() {
 
     setEmail(formattedEmail);
 
-    try {
-      const response = await axiosInstance.post("/api/auth/login", {
-        email: formattedEmail,
-        password: "Test123!",
-      });
-
-      console.log(response.data);
-
-      setIsLoggingIn(false);
-
-      if (response.status === 200) {
-        localStorage.setItem("kevii-gym-token", response.data.token);
-
-        toast({
-          title: "Login Successful",
-          description: "You will be redirected shortly.",
-          variant: "default",
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await axiosInstance.post("/api/auth/login", {
+          email: formattedEmail,
+          password: "Test123!",
         });
 
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 500);
+        console.log(response.data);
+
+        setIsLoggingIn(false);
+
+        if (response.status === 200) {
+          localStorage.setItem("kevii-gym-token", response.data.token);
+
+          toast({
+            title: "Login Successful",
+            description: "You will be redirected shortly.",
+            variant: "default",
+          });
+
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 500);
+
+          return;
+        }
+      } catch (error) {
+        console.error(
+          "Login error attempt " + (attempt + 1) + ":",
+          error.response?.data || error.message
+        );
+
+        if (attempt === 1) {
+          setIsLoggingIn(false);
+          toast({
+            title: "Login Failed",
+            description: "Wrong email or password.",
+            variant: "destructive",
+          });
+        } else {
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
       }
-    } catch (error) {
-      setIsLoggingIn(false);
-      console.error("Login error:", error.response?.data || error.message);
-      toast({
-        title: "Login Failed",
-        description: "Wrong email or password.",
-        variant: "destructive",
-      });
     }
   };
 
