@@ -35,7 +35,7 @@ function LoginPilot() {
 
     setEmail(formattedEmail);
 
-    for (let attempt = 0; attempt < 2; attempt++) {
+    for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const response = await axiosInstance.post("/api/auth/login", {
           email: formattedEmail,
