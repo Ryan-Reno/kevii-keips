@@ -356,9 +356,9 @@ function Book() {
                         >
                           <TableCell
                             key={`time-${rowIndex}`}
-                            className={`md:w-20 w-18 md:text-md text-sm `}
+                            className={`md:w-20 w-18 md:text-md text-sm`}
                           >
-                            <span className="">{time}</span>
+                            <span className="text-primary">{time}</span>
                           </TableCell>
                           {Array.from({ length: 7 }).map((_, colIndex) => (
                             <TableCell key={colIndex} className="w-24">
@@ -375,7 +375,7 @@ function Book() {
                           <TableCell
                             className={`md:w-20 w-18 md:text-md text-sm`}
                           >
-                            <span className="">{time}</span>
+                            <span className="text-primary">{time}</span>
                           </TableCell>
 
                           {dates.map((date) => {
