@@ -14,7 +14,7 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Milestone className="h-5 w-5" />
-              Demerit Points
+              Penalty Points
             </div>
             <Skeleton className="h-8 w-24" />
           </CardTitle>
@@ -48,7 +48,7 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Milestone className="h-5 w-5" />
-            Demerit Points
+            Penalty Points
           </div>
           <Badge
             variant={

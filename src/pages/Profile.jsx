@@ -197,7 +197,7 @@ function Profile() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bolt className="h-5 w-5" />
-              Gym Rules & Demerit System
+              Gym Rules & Penalty System
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -225,7 +225,7 @@ function Profile() {
             </div>
 
             <div>
-              <h2 className="font-semibold text-md pb-1">Demerit System:</h2>
+              <h2 className="font-semibold text-md pb-1">Penalty System:</h2>
               <ul className="list-disc list-inside text-sm space-y-1 pl-2">
                 <li>
                   5 points - Suspension:{" "}

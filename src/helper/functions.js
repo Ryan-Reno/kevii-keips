@@ -124,3 +124,14 @@ export function capitalizeFirstLetter(string) {
     }
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export function convertMinutesToHoursAndMinutes(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    if (hours === 0) {
+        return `${minutes} min`;
+    }
+
+    return `${hours} hr ${minutes} min`;
+}

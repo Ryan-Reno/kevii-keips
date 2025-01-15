@@ -3,6 +3,7 @@ import { DockBar } from "./Dock";
 import {
   getFormattedDate,
   formatDateTimeMixNoOffset,
+  convertMinutesToHoursAndMinutes,
 } from "../helper/functions";
 import axiosInstance from "../axiosInstance";
 import { useToast } from "../hooks/use-toast";
@@ -14,7 +15,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Loader2, Calendar, Trash2 } from "lucide-react";
+import {
+  Users,
+  Loader2,
+  Calendar,
+  Trash2,
+  CalendarArrowDown,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -31,11 +38,14 @@ function Dashboard() {
   const { toast } = useToast();
   const [isFetchingPopulation, setIsFetchingPopulation] = useState(false);
   const [isFetchingBooking, setIsFetchingBooking] = useState(false);
+  const [isFetchingCurrentBooking, setIsFetchingCurrentBooking] =
+    useState(false);
   const [populations, setPopulations] = useState({
     population: 0,
     message: "",
   });
   const [bookings, setBookings] = useState([]);
+  const [currentBookings, setCurrentBookings] = useState({});
   const [refresh, setRefresh] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -77,6 +87,27 @@ function Dashboard() {
       })
       .finally(() => {
         setIsFetchingBooking(false);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refresh]);
+
+  useEffect(() => {
+    setIsFetchingCurrentBooking(true);
+    axiosInstance
+      .get("/api/bookings/current")
+      .then((response) => {
+        setCurrentBookings(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch current bookings",
+          variant: "destructive",
+        });
+      })
+      .finally(() => {
+        setIsFetchingCurrentBooking(false);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
@@ -148,6 +179,47 @@ function Dashboard() {
               {populations.population}{" "}
               <span className="text-lg font-normal">people</span>
             </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card className="md:mb-6 mb-6 max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CalendarArrowDown className="h-5 w-5" />
+            Current Bookings
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isFetchingCurrentBooking ? (
+            <Skeleton className="h-24 w-full" />
+          ) : currentBookings.booking ? (
+            <Card className="relative">
+              <CardHeader>
+                <CardTitle className="md:text-lg text-md">
+                  {formatDateTimeMixNoOffset(currentBookings.booking.date)}
+                </CardTitle>
+                <CardDescription>
+                  Duration: {currentBookings.booking.duration} hours, Remaining:{" "}
+                  {convertMinutesToHoursAndMinutes(
+                    currentBookings.remainingMinutes
+                  )}{" "}
+                  {currentBookings?.overlappingUsers?.length > 0 && (
+                    <div className="mt-1">
+                      Sharing with:{" "}
+                      {currentBookings.overlappingUsers
+                        .map((user) => user.name)
+                        .join(", ")}
+                    </div>
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex gap-2 absolute top-5 right-0"></CardContent>
+            </Card>
+          ) : (
+            <p className="text-center text-muted-foreground">
+              No Current bookings
+            </p>
           )}
         </CardContent>
       </Card>

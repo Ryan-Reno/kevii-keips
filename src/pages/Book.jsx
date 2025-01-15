@@ -46,10 +46,8 @@ import { BookMarked, Loader2, User } from "lucide-react";
 import {
   formatDateTime,
   formatDate,
-  formatTime,
   convertToISO,
   getFormattedDate,
-  formatTimeShort,
 } from "../helper/functions";
 import { useTheme } from "@/components/theme-provider";
 
@@ -358,18 +356,9 @@ function Book() {
                         >
                           <TableCell
                             key={`time-${rowIndex}`}
-                            className={`md:w-24 w-18 md:text-md text-sm ${
-                              formatTimeShort(time).period === "PM"
-                                ? "bg-red-400 dark:bg-red-800 text-primary"
-                                : "bg-blue-400 dark:bg-blue-900 text-primary"
-                            }`}
+                            className={`md:w-20 w-18 md:text-md text-sm `}
                           >
-                            <span className="md:hidden block">
-                              {formatTimeShort(time).time}
-                            </span>
-                            <span className="md:block hidden">
-                              {formatTime(time)}
-                            </span>
+                            <span className="">{time}</span>
                           </TableCell>
                           {Array.from({ length: 7 }).map((_, colIndex) => (
                             <TableCell key={colIndex} className="w-24">
@@ -384,18 +373,9 @@ function Book() {
                           className="dark:border-neutral-600"
                         >
                           <TableCell
-                            className={`md:w-24 w-18 md:text-md text-sm ${
-                              formatTimeShort(time).period === "PM"
-                                ? "bg-red-400 dark:bg-red-800 text-primary"
-                                : "bg-blue-400 dark:bg-blue-900 text-primary"
-                            }`}
+                            className={`md:w-20 w-18 md:text-md text-sm`}
                           >
-                            <span className="md:hidden block">
-                              {formatTimeShort(time).time}
-                            </span>
-                            <span className="md:block hidden">
-                              {formatTime(time)}
-                            </span>
+                            <span className="">{time}</span>
                           </TableCell>
 
                           {dates.map((date) => {
@@ -596,16 +576,6 @@ function Book() {
                     </span>
                   </div>
                 ))}
-              </div>
-              <div className="flex items-center justify-center gap-4 pt-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-blue-400 dark:bg-blue-900 rounded" />
-                  <span className="text-sm text-muted-foreground">AM</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-red-400 dark:bg-red-800 rounded" />
-                  <span className="text-sm text-muted-foreground">PM</span>
-                </div>
               </div>
             </div>
           </CardContent>
