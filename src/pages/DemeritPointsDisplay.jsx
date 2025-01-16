@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AlertTriangle, Milestone } from "lucide-react";
-import { formatDateTimeMix } from "../helper/functions";
+import { formatDate, formatDateTimeMix } from "../helper/functions";
 
-const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
+const DemeritPointsDisplay = ({ demeritPoints, suspended, isLoading }) => {
   if (isLoading) {
     return (
       <Card className="mt-5 w-full max-w-md mx-auto">
@@ -35,11 +35,11 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
 
   let suspensionMessage = "";
   if (totalPoints >= 15) {
-    suspensionMessage = "Your account will be suspended for 30 days.";
+    suspensionMessage = "Your account will be suspended for 30 days";
   } else if (totalPoints >= 10) {
-    suspensionMessage = "Your account will be suspended for 14 days.";
+    suspensionMessage = "Your account will be suspended for 14 days";
   } else if (totalPoints >= 5) {
-    suspensionMessage = "Your account will be suspended for 7 days.";
+    suspensionMessage = "Your account will be suspended for 7 days";
   }
 
   return (
@@ -70,8 +70,11 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
             <AlertTriangle className="h-4 w-4" />
             <AlertTitle>Warning</AlertTitle>
             <AlertDescription>
-              You have accumulated {totalPoints} demerit points.{" "}
-              {suspensionMessage}
+              You have accumulated {totalPoints} penalty points.{" "}
+              {suspensionMessage}{" "}
+              {suspended.until
+                ? "until " + formatDate(suspended.until).toLowerCase() + "."
+                : "."}
             </AlertDescription>
           </Alert>
         )}
@@ -101,6 +104,9 @@ const DemeritPointsDisplay = ({ demeritPoints, isLoading }) => {
 
 DemeritPointsDisplay.propTypes = {
   isLoading: PropTypes.bool,
+  suspended: PropTypes.shape({
+    until: PropTypes.string,
+  }),
   demeritPoints: PropTypes.shape({
     totalPoints: PropTypes.number,
     demeritsByReason: PropTypes.object,

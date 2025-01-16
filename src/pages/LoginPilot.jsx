@@ -71,7 +71,7 @@ function LoginPilot() {
           setIsLoggingIn(false);
           toast({
             title: "Login Failed",
-            description: "Wrong email or password.",
+            description: "Wrong email or ID.",
             variant: "destructive",
           });
         } else {
@@ -116,12 +116,12 @@ function LoginPilot() {
               Login
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm text-primary">
+          {/* <div className="mt-4 text-center text-sm text-primary">
             Don&apos;t have an account?{" "}
             <a href="/register" className="underline" disabled={isLoggingIn}>
               Register
             </a>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="hidden md:block bg-muted col-span-1">

@@ -147,6 +147,7 @@ function Profile() {
 
         <DemeritPointsDisplay
           demeritPoints={demeritPoints}
+          suspended={user.suspended || {}}
           isLoading={isFetchingDemeritPoints}
         />
 

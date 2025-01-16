@@ -16,7 +16,7 @@ import Profile from "./pages/Profile";
 import { ThemeProvider } from "@/components/theme-provider";
 import axiosInstance from "./axiosInstance";
 import LoginPilot from "./pages/LoginPilot";
-import RegisterPilot from "./pages/RegisterPilot";
+// import RegisterPilot from "./pages/RegisterPilot";
 
 function App() {
   useEffect(() => {
@@ -62,10 +62,10 @@ function App() {
               path="/login"
               element={<AuthRoute element={<LoginPilot />} />}
             />
-            <Route
+            {/* <Route
               path="/register"
               element={<AuthRoute element={<RegisterPilot />} />}
-            />
+            /> */}
             <Route
               path="/dashboard"
               element={<PrivateRoute element={<Dashboard />} />}
