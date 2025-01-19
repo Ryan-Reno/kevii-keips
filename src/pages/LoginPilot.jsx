@@ -93,11 +93,11 @@ function LoginPilot() {
           </div>
           <form onSubmit={handleLogin} className="grid gap-4 text-primary">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">NUSID@u.nus.edu or NUSID</Label>
               <Input
                 id="email"
                 type="string"
-                placeholder="NUSID@u.nus.edu or NUSID"
+                placeholder="E1234567@u.nus.edu or E1234567"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
