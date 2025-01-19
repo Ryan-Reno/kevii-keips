@@ -93,7 +93,7 @@ function LoginPilot() {
           </div>
           <form onSubmit={handleLogin} className="grid gap-4 text-primary">
             <div className="grid gap-2">
-              <Label htmlFor="email">NUSID@u.nus.edu or NUSID</Label>
+              <Label htmlFor="email">NUSID</Label>
               <Input
                 id="email"
                 type="string"
