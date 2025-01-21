@@ -8,7 +8,7 @@ import {
 // import Login from "./pages/Login";
 // import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import { PrivateRoute, AuthRoute } from "./Router";
+import { PrivateRoute, AuthRoute, AdminRoute } from "./Router";
 import { Toaster } from "@/components/ui/toaster";
 import Book from "./pages/Book";
 import Checkin from "./pages/Checkin";
@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import { ThemeProvider } from "@/components/theme-provider";
 import axiosInstance from "./axiosInstance";
 import LoginPilot from "./pages/LoginPilot";
+import AdminPage from "./pages/AdminPage";
 // import RegisterPilot from "./pages/RegisterPilot";
 
 function App() {
@@ -75,6 +76,7 @@ function App() {
               element={<PrivateRoute element={<Checkin />} />}
             />
             <Route path="/book" element={<PrivateRoute element={<Book />} />} />
+            <Route path="/admin" element={<AdminRoute element={<AdminPage />} />} />
             <Route
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}

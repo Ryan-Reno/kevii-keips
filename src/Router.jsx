@@ -15,6 +15,12 @@ export const AuthRoute = ({ element }) => {
   return !token ? element : <Navigate to="/dashboard" replace />;
 };
 
+export const AdminRoute = ({ element }) => {
+  const token = localStorage.getItem("kevii-gym-token");
+  const isAdmin = localStorage.getItem("kevii-gym-admin") === "true";
+  return token && isAdmin ? element : <Navigate to="/dashboard" replace />;
+};
+
 AuthRoute.propTypes = {
   element: PropTypes.element.isRequired,
 };

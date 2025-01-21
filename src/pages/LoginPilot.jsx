@@ -48,6 +48,7 @@ function LoginPilot() {
 
         if (response.status === 200) {
           localStorage.setItem("kevii-gym-token", response.data.token);
+          response.data.user.admin && localStorage.setItem("kevii-gym-admin", response.data.user.admin)
 
           toast({
             title: "Login Successful",

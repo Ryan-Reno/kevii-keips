@@ -88,6 +88,7 @@ function Profile() {
 
   const handleLogout = () => {
     localStorage.removeItem("kevii-gym-token");
+    localStorage.removeItem("kevii-gym-admin");
     window.location.href = "/login";
   };
 

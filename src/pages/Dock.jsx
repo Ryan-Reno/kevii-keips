@@ -1,4 +1,4 @@
-import { CalendarArrowDown, Clock, HomeIcon, User } from "lucide-react";
+import { CalendarArrowDown, Clock, HomeIcon, User, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -17,9 +17,12 @@ const DATA = {
     { href: "/book", icon: CalendarArrowDown, label: "Book" },
   ],
   navbar2: [{ href: "/profile", icon: User, label: "Profile" }],
+  admin: [{ href: "/admin", icon: Lock, label: "Admin" }],
 };
 
 export function DockBar() {
+  const isAdmin = localStorage.getItem("kevii-gym-admin");
+
   return (
     <div className="z-[100]">
       <TooltipProvider>
@@ -89,6 +92,45 @@ export function DockBar() {
               </Tooltip>
             </DockIcon>
           ))}
+
+          {isAdmin === "true" && (
+            <Separator orientation="vertical" className="h-full" />
+          )}
+          {isAdmin === "true" &&
+            DATA?.admin?.map((item) => (
+              <DockIcon key={item.label}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <a
+                      href={item.href}
+                      aria-label={item.label}
+                      className={`${
+                        window.location.pathname === item.href
+                          ? cn(
+                              buttonVariants({
+                                variant: "secondary",
+                                size: "icon",
+                              }),
+                              "size-12 rounded-full text-primary"
+                            )
+                          : cn(
+                              buttonVariants({
+                                variant: "ghost",
+                                size: "icon",
+                              }),
+                              "size-12 rounded-full text-primary"
+                            )
+                      }`}
+                    >
+                      <item.icon className="size-4" />
+                    </a>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{item.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </DockIcon>
+            ))}
         </Dock>
       </TooltipProvider>
     </div>
