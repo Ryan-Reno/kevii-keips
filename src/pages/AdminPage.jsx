@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 function AdminPage() {
   const [demerits, setDemerits] = useState({});
@@ -188,9 +189,19 @@ function AdminPage() {
                       <div className="flex justify-between items-start gap-4">
                         <div className="space-y-1">
                           <p className="font-medium">{qrcode.name}</p>
-                          <p className="text-sm text-muted-foreground overflow-clip max-w-60">
-                            {qrcode.code}
-                          </p>
+                          <div className="flex items-center gap-2 justify-between w-full">
+                            <p className="text-sm text-muted-foreground overflow-clip max-w-56">
+                              {qrcode.code.substring(0, 20)}...
+                            </p>
+                            {qrcode.active && (
+                              <SquareArrowOutUpRight
+                                className="w-4 h-4 hover:cursor-pointer"
+                                onClick={() =>
+                                  window.open(`/admin/qr?code=${qrcode.code}&name=${qrcode.name}`, '_blank')
+                                }
+                              />
+                            )}
+                          </div>
                         </div>
                         <Dialog>
                           <DialogTrigger disabled={!qrcode.active}>

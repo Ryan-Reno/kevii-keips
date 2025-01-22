@@ -17,6 +17,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import axiosInstance from "./axiosInstance";
 import LoginPilot from "./pages/LoginPilot";
 import AdminPage from "./pages/AdminPage";
+import QRCodeDisplay from "./pages/QRCode";
 // import RegisterPilot from "./pages/RegisterPilot";
 
 function App() {
@@ -76,7 +77,14 @@ function App() {
               element={<PrivateRoute element={<Checkin />} />}
             />
             <Route path="/book" element={<PrivateRoute element={<Book />} />} />
-            <Route path="/admin" element={<AdminRoute element={<AdminPage />} />} />
+            <Route
+              path="/admin"
+              element={<AdminRoute element={<AdminPage />} />}
+            />
+            <Route
+              path="/admin/qr"
+              element={<AdminRoute element={<QRCodeDisplay />} />}
+            />
             <Route
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
