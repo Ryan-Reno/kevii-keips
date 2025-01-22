@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     axiosInstance
-      .post("/api/suspend/auto-check")
+      .post("/api/suspend/auto-check/current-user")
       .then((response) => {
         console.log(response.data);
       })
