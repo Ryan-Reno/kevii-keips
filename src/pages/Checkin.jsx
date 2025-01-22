@@ -43,7 +43,7 @@ function Checkin() {
     useState(true);
   const [refresh, setRefresh] = useState(0);
   const [correctQr, setCorrectQr] = useState(false);
-  const [isCheckinSuccessful, setIsCheckinSuccessful] = useState(false); // New state variable
+  const [isCheckinSuccessful, setIsCheckinSuccessful] = useState(false);
 
   useEffect(() => {
     if (scanResult !== "") {
@@ -93,7 +93,7 @@ function Checkin() {
           variant: "default",
         });
         setRefresh((prev) => prev + 1);
-        setIsCheckinSuccessful(true); // Set the state to true on successful check-in
+        setIsCheckinSuccessful(true);
       })
       .catch((error) => {
         console.error(error);
@@ -120,6 +120,7 @@ function Checkin() {
           variant: "default",
         });
         setRefresh((prev) => prev + 1);
+        setIsCheckinSuccessful(false);
       })
       .catch((error) => {
         console.error(error);
@@ -279,7 +280,6 @@ function Checkin() {
             </div>
           )}
 
-          {/* Conditionally render the form button after successful check-in */}
           {isCheckinSuccessful && (
             <div className="mt-4">
               <Button asChild className="w-full">
@@ -288,7 +288,7 @@ function Checkin() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Open Form
+                  Open Registration Form
                 </a>
               </Button>
             </div>
