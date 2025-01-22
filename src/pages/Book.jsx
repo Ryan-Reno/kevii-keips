@@ -69,10 +69,10 @@ const times = [
   // "04:30",
   // "05:00",
   // "05:30",
-  "06:00",
-  "06:30",
-  "07:00",
-  "07:30",
+  // "06:00",
+  // "06:30",
+  // "07:00",
+  // "07:30",
   "08:00",
   "08:30",
   "09:00",
@@ -103,7 +103,7 @@ const times = [
   "21:30",
   "22:00",
   "22:30",
-  "23:00",
+  // "23:00",
   // "23:30",
 ];
 
@@ -222,11 +222,11 @@ function Book() {
   }
 
   const legendItems = [
-    { value: 0, label: "Available" },
-    { value: 1, label: "1 Booking" },
-    { value: 2, label: "2 Bookings" },
-    { value: 3, label: "3 Bookings" },
-    { value: 4, label: "4 Bookings" },
+    { value: 0, label: "5 Available" },
+    { value: 1, label: "4 Available" },
+    { value: 2, label: "3 Available" },
+    { value: 3, label: "2 Available" },
+    { value: 4, label: "1 Available" },
     { value: 5, label: "Full" },
     { value: 100, label: "Your Booking" },
     { value: true, label: "Disabled" },
@@ -252,6 +252,11 @@ function Book() {
           setTimeout(() => {
             window.location.reload();
           }, 1000);
+
+          toast({
+            title: "Booking",
+            description: "Booking successful, page will reload soon.",
+          });
         }
       })
       .catch((error) => {
@@ -405,7 +410,9 @@ function Book() {
                                           cellValue
                                         )} text-foreground`}
                                       >
-                                        {cellValue}
+                                        {cellValue === 100
+                                          ? cellValue
+                                          : 5 - cellValue}
                                       </TableCell>
                                     </DrawerTrigger>
                                     <DrawerContent>
@@ -529,7 +536,7 @@ function Book() {
                                       {cellValue === 100 ? (
                                         <User className="md:w-4 md:h-4 w-3 h-3 inline-block" />
                                       ) : (
-                                        cellValue
+                                        5 - cellValue
                                       )}
                                     </div>
                                   </TableCell>
@@ -567,7 +574,7 @@ function Book() {
                       )}
                       {item.value !== 100 && (
                         <span className="text-xs text-primary">
-                          {item.value}
+                          {5 - item.value}
                         </span>
                       )}
                     </div>

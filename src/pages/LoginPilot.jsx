@@ -16,29 +16,10 @@ function LoginPilot() {
     setIsLoggingIn(true);
     event.preventDefault();
 
-    const emailRegex = /^[Ee]\d{7}(@u.nus.edu)?$/;
-
-    if (!emailRegex.test(email)) {
-      toast({
-        title: "Invalid Email",
-        description: "Please enter a valid NUS email or NUS ID.",
-        variant: "destructive",
-      });
-
-      setIsLoggingIn(false);
-      return;
-    }
-
-    const formattedEmail = email.endsWith("@u.nus.edu")
-      ? `E${email.slice(1)}`
-      : `E${email.slice(1)}@u.nus.edu`;
-
-    setEmail(formattedEmail);
-
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
         const response = await axiosInstance.post("/api/auth/login", {
-          email: formattedEmail,
+          email: email,
           password: "Test123!",
         });
 
