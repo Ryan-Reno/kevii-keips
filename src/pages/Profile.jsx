@@ -129,7 +129,7 @@ function Profile() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-muted-foreground">
-                    Email
+                    MATNET
                   </p>
                   <p className="text-lg font-medium">{user.email}</p>
                 </div>
