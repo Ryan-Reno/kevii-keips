@@ -29,7 +29,8 @@ function LoginPilot() {
 
         if (response.status === 200) {
           localStorage.setItem("kevii-gym-token", response.data.token);
-          response.data.user.admin && localStorage.setItem("kevii-gym-admin", response.data.user.admin)
+          response.data.user.admin &&
+            localStorage.setItem("kevii-gym-admin", response.data.user.admin);
 
           toast({
             title: "Login Successful",
@@ -69,17 +70,25 @@ function LoginPilot() {
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold text-primary">Login</h1>
-            <p className="text-balance text-muted-foreground">
-              Use your NUS Email or ID to login
-            </p>
+            <div className="flex flex-col">
+              <p className="text-balance text-muted-foreground">
+                Matric Number: AXXXX123Z
+              </p>
+              <p className="text-balance text-muted-foreground">
+                NUSNET: EXXX4567
+              </p>
+              <p className="text-balance text-muted-foreground">
+                MATNET: 123Z4567
+              </p>
+            </div>
           </div>
           <form onSubmit={handleLogin} className="grid gap-4 text-primary">
             <div className="grid gap-2">
-              <Label htmlFor="email">NUSID</Label>
+              <Label htmlFor="email">MATNET</Label>
               <Input
                 id="email"
                 type="string"
-                placeholder="E1234567@u.nus.edu or E1234567"
+                placeholder="e.g., 123Z4567 or 666X9999"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
