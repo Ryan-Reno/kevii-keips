@@ -146,14 +146,14 @@ function LoginPilot() {
                           </div>
                           {matric &&
                             nusnet &&
-                            matric.length === 9 &&
-                            nusnet.length === 8 && (
+                            matric.trim().length === 9 &&
+                            nusnet.trim().length === 8 && (
                               <div className="flex gap-8 items-center justify-center">
                                 <p className="text-primary text-lg">
                                   MATNET:{" "}
                                   <span className="font-bold">
-                                    {matric.substring(5, 9)}
-                                    {nusnet.substring(4, 8)}
+                                    {matric.trim().substring(5, 9)}
+                                    {nusnet.trim().substring(4, 8)}
                                   </span>
                                 </p>
 
@@ -161,8 +161,8 @@ function LoginPilot() {
                                   className="flex flex-col items-center"
                                   onClick={() =>
                                     copyText(
-                                      matric.substring(5, 9) +
-                                        nusnet.substring(4, 8)
+                                      matric.trim().substring(5, 9) +
+                                        nusnet.trim().substring(4, 8)
                                     )
                                   }
                                 >
@@ -174,8 +174,8 @@ function LoginPilot() {
                                     className="flex flex-col items-center"
                                     onClick={() =>
                                       putToEmail(
-                                        matric.substring(5, 9) +
-                                          nusnet.substring(4, 8)
+                                        matric.trim().substring(5, 9) +
+                                          nusnet.trim().substring(4, 8)
                                       )
                                     }
                                   >
