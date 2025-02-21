@@ -1,64 +1,84 @@
-import React, { useState } from "react";
-import QRCode from "react-qr-code";
-import { useSearchParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useEffect, useRef } from "react";
+import { Html5Qrcode } from "html5-qrcode";
 
-const QRCodeDisplay = () => {
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code") || "";
-  const name = searchParams.get("name") || "";
+const QrReader = ({ onResult }) => {
+  const qrRef = useRef < HTMLDivElement > null;
 
-  const [qrSize, setQrSize] = useState(256);
+  useEffect(() => {
+    // Define a unique ID for the scanner element
+    const qrCodeId = "qr-code-reader";
 
-  const handlePrint = () => {
-    window.print();
-  };
+    // Make sure we have the container element
+    if (!qrRef.current) return;
+
+    // Create or find the scanner container
+    let scannerContainer = document.getElementById(qrCodeId);
+    if (!scannerContainer) {
+      scannerContainer = document.createElement("div");
+      scannerContainer.id = qrCodeId;
+      qrRef.current.appendChild(scannerContainer);
+    }
+
+    // Create scanner instance
+    const html5QrCode = new Html5Qrcode(qrCodeId);
+    let isScanning = false;
+
+    const startScanner = async () => {
+      try {
+        // Check camera availability first
+        const devices = await Html5Qrcode.getCameras();
+        if (devices && devices.length > 0) {
+          const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1,
+          };
+
+          await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            (decodedText) => {
+              console.log("QR Code detected:", decodedText);
+              onResult(decodedText);
+            },
+            () => {
+              /* Ignore errors during normal scanning */
+            }
+          );
+
+          isScanning = true;
+          console.log("HTML5 QR scanner started successfully");
+        } else {
+          console.error("No cameras found");
+        }
+      } catch (err) {
+        console.error("Error starting scanner:", err);
+      }
+    };
+
+    startScanner();
+
+    // Cleanup function
+    return () => {
+      if (html5QrCode && isScanning) {
+        html5QrCode
+          .stop()
+          .catch((err) => console.error("Error stopping scanner:", err));
+      }
+    };
+  }, [onResult]);
 
   return (
-    <div className="flex flex-col items-center gap-4 bg-white p-4 rounded-lg min-h-screen pt-10">
+    <div className="qr-scanner-container">
       <div
-        className="h-64 w-64"
-        style={{ height: `${qrSize}px`, width: `${qrSize}px` }}
-      >
-        <QRCode
-          value={code}
-          size={qrSize}
-          className="h-full w-full"
-          viewBox="0 0 256 256"
-        />
+        ref={qrRef}
+        className="relative h-[300px] w-full overflow-hidden rounded-lg bg-gray-100"
+      />
+      <div className="mt-2 text-center text-sm text-gray-600">
+        Position QR code within view
       </div>
-
-      {name && <span className="text-black text-2xl font-bold">{name}</span>}
-
-      <div className="print:hidden">
-        <Select onValueChange={(value) => setQrSize(Number(value))}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select QR Size" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="128">128x128</SelectItem>
-            <SelectItem value="256">256x256</SelectItem>
-            <SelectItem value="512">512x512</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Button
-        onClick={handlePrint}
-        className="print:hidden"
-        variant="secondary"
-      >
-        Print
-      </Button>
     </div>
   );
 };
 
-export default QRCodeDisplay;
+export default QrReader;
