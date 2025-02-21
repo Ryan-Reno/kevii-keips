@@ -1,69 +1,85 @@
-import { useEffect, useRef, useState } from "react";
-import QrScanner from "qr-scanner";
-import QrFrame from "/images/qr-frame.svg";
-import { useToast } from "../hooks/use-toast";
+import { useEffect, useRef } from "react";
+import { Html5Qrcode } from "html5-qrcode";
 
-const QrReader = ({ onResult }) => {
-  const { toast } = useToast();
+interface Html5QrReaderProps {
+  onResult: (data: string) => void;
+}
 
-  const scanner = useRef<QrScanner>();
-  const videoEl = useRef<HTMLVideoElement>(null);
-  const qrBoxEl = useRef<HTMLDivElement>(null);
-  const [qrOn, setQrOn] = useState<boolean>(true);
-
-  const onScanSuccess = (result: QrScanner.ScanResult) => {
-    console.log(result);
-    onResult(result?.data);
-  };
-
-  const onScanFail = (err: string | Error) => {
-    console.log(err);
-  };
+const QrReader = ({ onResult }: Html5QrReaderProps) => {
+  const qrRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (videoEl?.current && !scanner.current) {
-      scanner.current = new QrScanner(videoEl?.current, onScanSuccess, {
-        onDecodeError: onScanFail,
-        preferredCamera: "environment",
-        highlightScanRegion: true,
-        highlightCodeOutline: true,
-        overlay: qrBoxEl?.current || undefined,
-      });
+    // Define a unique ID for the scanner element
+    const qrCodeId = "qr-code-reader";
 
-      scanner?.current
-        ?.start()
-        .then(() => setQrOn(true))
-        .catch((err) => {
-          if (err) setQrOn(false);
-        });
+    // Make sure we have the container element
+    if (!qrRef.current) return;
+
+    // Create or find the scanner container
+    let scannerContainer = document.getElementById(qrCodeId);
+    if (!scannerContainer) {
+      scannerContainer = document.createElement("div");
+      scannerContainer.id = qrCodeId;
+      qrRef.current.appendChild(scannerContainer);
     }
 
-    return () => {
-      if (!videoEl?.current) {
-        scanner?.current?.stop();
+    // Create scanner instance
+    const html5QrCode = new Html5Qrcode(qrCodeId);
+    let isScanning = false;
+
+    const startScanner = async () => {
+      try {
+        // Check camera availability first
+        const devices = await Html5Qrcode.getCameras();
+        if (devices && devices.length > 0) {
+          const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1,
+          };
+
+          await html5QrCode.start(
+            { facingMode: "environment" },
+            config,
+            (decodedText) => {
+              console.log("QR Code detected:", decodedText);
+              onResult(decodedText);
+            },
+            () => {
+              /* Ignore errors during normal scanning */
+            }
+          );
+
+          isScanning = true;
+          console.log("HTML5 QR scanner started successfully");
+        } else {
+          console.error("No cameras found");
+        }
+      } catch (err) {
+        console.error("Error starting scanner:", err);
       }
     };
-  }, []);
 
-  useEffect(() => {
-    if (!qrOn)
-      toast({
-        title: "Camera is blocked or not accessible.",
-        description:
-          "Please allow camera in your browser permissions and Reload.",
-        variant: "destructive",
-      });
-  }, [qrOn]);
+    startScanner();
+
+    // Cleanup function
+    return () => {
+      if (html5QrCode && isScanning) {
+        html5QrCode
+          .stop()
+          .catch((err) => console.error("Error stopping scanner:", err));
+      }
+    };
+  }, [onResult]);
 
   return (
-    <div className="w-full h-screen flex flex-col items-center relative">
-      <video ref={videoEl} className="w-[100%] h-[50%] object-cover"></video>
-      <div ref={qrBoxEl} className="w-full absolute">
-        <img
-          src={QrFrame}
-          alt="Qr Frame"
-          className="absolute w-96 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        />
+    <div className="qr-scanner-container">
+      <div
+        ref={qrRef}
+        className="relative h-[300px] w-full overflow-hidden rounded-lg bg-gray-100"
+      />
+      <div className="mt-2 text-center text-sm text-gray-600">
+        Position QR code within view
       </div>
     </div>
   );
