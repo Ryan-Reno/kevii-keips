@@ -146,10 +146,11 @@ function Checkin() {
     axiosInstance
       .get(`/api/qrcode/${result}`)
       .then((response) => {
-        const { active } = response.data;
+        const { active } = response.data[0];
 
         if (active) {
           setCorrectQr(true);
+          setOpenQr(false);
         } else {
           toast({
             title: "Inactive QR Code",
