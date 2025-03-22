@@ -87,7 +87,7 @@ export default function Keips() {
   };
 
   return (
-    <div className="container py-8 px-4">
+    <div className="bg-white text-black min-h-screen container py-8 px-4">
       <div className="w-full flex justify-end pr-6 pt-4">
         <Button variant="destructive" onClick={handleLogout} className="px-3 py-1 text-sm">
             <LogOut className="mr-1 h-3 w-3" />
