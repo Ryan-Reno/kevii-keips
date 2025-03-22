@@ -105,22 +105,22 @@ export default function Keips() {
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="bg-white">
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     CCA
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Tier
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Attendance
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Performance
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Multiplier
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Total
                   </TableHead>
                 </TableRow>
@@ -131,22 +131,22 @@ export default function Keips() {
                     key={`osa-${cca.name}-${index}`}
                     className={index % 2 === 0 ? "bg-slate-200" : "bg-white"}
                   >
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.name}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.tier}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.attendance}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.performance}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.multiplier}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.total}
                     </TableCell>
                   </TableRow>
@@ -165,22 +165,22 @@ export default function Keips() {
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="bg-white">
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     CCA
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Tier
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Attendance
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Performance
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Multiplier
                   </TableHead>
-                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                  <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                     Total
                   </TableHead>
                 </TableRow>
@@ -191,22 +191,22 @@ export default function Keips() {
                     key={`all-${cca.name}-${index}`}
                     className={index % 2 === 0 ? "bg-slate-200" : "bg-white"}
                   >
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.name}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.tier}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.attendance}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.performance}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.multiplier}
                     </TableCell>
-                    <TableCell className="text-base md:text-lg p-[8px]">
+                    <TableCell className="text-base md:text-lg p-[6px]">
                       {cca.total}
                     </TableCell>
                   </TableRow>
@@ -224,20 +224,20 @@ export default function Keips() {
           <Table className="min-w-full">
             <TableHeader>
               <TableRow className="bg-white">
-                <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                   OSA RP
                 </TableHead>
-                <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[8px]">
+                <TableHead className="text-base md:text-lg font-medium text-gray-700 p-[6px]">
                   OSA Points
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow className="bg-slate-200">
-                <TableCell className="text-base md:text-lg p-[8px]">
+                <TableCell className="text-base md:text-lg p-[6px]">
                   {student.osaRP}
                 </TableCell>
-                <TableCell className="text-base md:text-lg p-[8px]">
+                <TableCell className="text-base md:text-lg p-[6px]">
                   {student.osaPoints}
                 </TableCell>
               </TableRow>
