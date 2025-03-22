@@ -18,6 +18,7 @@ import axiosInstance from "./axiosInstance";
 import LoginPilot from "./pages/LoginPilot";
 import AdminPage from "./pages/AdminPage";
 import QRCodeDisplay from "./pages/QRCode";
+import Keips from "./pages/keips";
 // import RegisterPilot from "./pages/RegisterPilot";
 
 function App() {
@@ -68,7 +69,7 @@ function App() {
               path="/register"
               element={<AuthRoute element={<RegisterPilot />} />}
             /> */}
-            <Route
+            {/* <Route
               path="/dashboard"
               element={<PrivateRoute element={<Dashboard />} />}
             />
@@ -76,8 +77,9 @@ function App() {
               path="/checkin"
               element={<PrivateRoute element={<Checkin />} />}
             />
-            <Route path="/book" element={<PrivateRoute element={<Book />} />} />
-            <Route
+            <Route path="/book" element={<PrivateRoute element={<Book />} />} /> */}
+            <Route path="/keips" element={<PrivateRoute element={<Keips />} />} />
+            {/* <Route
               path="/admin"
               element={<AdminRoute element={<AdminPage />} />}
             />
@@ -88,7 +90,7 @@ function App() {
             <Route
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
-            />
+            /> */}
           </Routes>
         </Router>
       </div>

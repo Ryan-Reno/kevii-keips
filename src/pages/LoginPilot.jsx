@@ -30,9 +30,8 @@ function LoginPilot() {
 
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
-        const response = await axiosInstance.post("/api/auth/login", {
-          email: email,
-          password: "Test123!",
+        const response = await axiosInstance.post("/api/auth/keipsLogin", {
+          matNET: email,
         });
 
         console.log(response.data);
@@ -41,8 +40,7 @@ function LoginPilot() {
 
         if (response.status === 200) {
           localStorage.setItem("kevii-gym-token", response.data.token);
-          response.data.user.admin &&
-            localStorage.setItem("kevii-gym-admin", response.data.user.admin);
+
 
           toast({
             title: "Login Successful",
@@ -51,7 +49,7 @@ function LoginPilot() {
           });
 
           setTimeout(() => {
-            window.location.href = "/dashboard";
+            window.location.href = "/keips";
           }, 500);
 
           return;
