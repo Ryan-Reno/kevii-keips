@@ -38,16 +38,12 @@ export default function Keips() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Function to parse CCA strings
   const parseCCAs = (ccaString) => {
     if (!ccaString) return [];
-    // Split by '|' and filter out empty strings
     return ccaString
       .split("|")
       .filter((item) => item.trim() !== "")
       .map((item) => {
-        // Each item should be in the format:
-        // CCA Name-CCA Tier-Attendance point-Performance point-Multiplier-Total point
         const parts = item.split("-");
         return {
           name: parts[0] || "",
@@ -59,6 +55,47 @@ export default function Keips() {
         };
       });
   };
+
+
+  const parseRPBreakdown = (rpBreakdown) => {
+    const cappedRP = [];
+    const uncappedRP = [];
+    let isCapped = false;
+  
+    if (!rpBreakdown) return { cappedRP, uncappedRP };
+  
+    // Remove leading and trailing spaces and split into individual items
+    const items = rpBreakdown.split("|");
+  
+    items.forEach((item) => {
+      item = item.trim();
+  
+      if (item.startsWith("capped:")) {
+        isCapped = true; // Start reading capped events
+        item = item.replace("capped:", "").trim();
+      } else if (item.startsWith("uncapped:")) {
+        isCapped = false; // Switch to uncapped events
+        item = item.replace("uncapped:", "").trim();
+      }
+  
+      if (item) {
+        const parts = item.split("+");
+  
+        if (isCapped && parts.length === 2) {
+          // Store capped event (format: Event+Points)
+          cappedRP.push({ event: parts[0], points: Number(parts[1]) });
+        } else if (!isCapped && parts.length === 3) {
+          // Store uncapped event (format: CCA+Role+Points)
+          uncappedRP.push({ cca: parts[0], role: parts[1], points: Number(parts[2]) });
+        }
+      }
+    });
+
+    uncappedRP.sort((a, b) => b.points - a.points);
+  
+    return { cappedRP, uncappedRP };
+  };
+
 
   if (isFetchingStatus) {
     return (
@@ -79,8 +116,14 @@ export default function Keips() {
     );
   }
 
-  const osaCCAs = parseCCAs(student.osaCCAs);
-  const allOtherCCAs = parseCCAs(student.allOtherCCAs);
+const { cappedRP, uncappedRP } = parseRPBreakdown(student.rpBreakdown);
+
+const totalCappedRP = Math.min(
+  cappedRP.reduce((sum, item) => sum + item.points, -22),
+  22
+);
+  const osaCCAs = parseCCAs(student.osaCCAs).sort((a, b) => Number(b.total) - Number(a.total));
+  const allOtherCCAs = parseCCAs(student.allOtherCCAs).sort((a, b) => Number(b.total) - Number(a.total));
   const handleLogout = () => {
     localStorage.removeItem("kevii-gym-token");
     window.location.href = "/login";
@@ -216,45 +259,83 @@ export default function Keips() {
           </div>
         </div>
 
-        {/* Table 3: OSA RP and OSA Points */}
+        {/* Table 3: Bonus Points (Uncapped RP) */}
         <div>
-          <h1 className="text-center text-xl md:text-2xl font-medium my-4">
-            OSA RP and Points
-          </h1>
+          <h1 className="text-center text-xl md:text-2xl font-medium my-4">Bonus Points</h1>
           <Table className="min-w-full">
             <TableHeader>
               <TableRow className="bg-white">
-                <TableHead className="text-base md:text-lg font-medium text-gray-700 !p-2">
-                  OSA RP
-                </TableHead>
-                <TableHead className="text-base md:text-lg font-medium text-gray-700 !p-2">
-                  OSA Points
-                </TableHead>
+                <TableHead>CCA</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Points</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {uncappedRP.map((entry, index) => (
+                <TableRow key={`uncapped-${index}`} className={index % 2 === 0 ? "bg-slate-200" : "bg-white"}>
+                  <TableCell>{entry.cca}</TableCell>
+                  <TableCell>{entry.role}</TableCell>
+                  <TableCell>{entry.points}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Table 4: OSA RP and OSA Points */}
+        <div>
+          <h1 className="text-center text-xl md:text-2xl font-medium my-4">RP and OSA RP</h1>
+          <Table className="min-w-full">
+            <TableHeader>
+              <TableRow className="bg-white">
+                <TableHead>RP</TableHead>
+                <TableHead>OSA RP (Bonus points + RP)</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow className="bg-slate-200">
-                <TableCell className="text-base md:text-lg !p-2">
-                  {student.osaRP}
-                </TableCell>
-                <TableCell className="text-base md:text-lg !p-2">
-                  {student.osaPoints}
-                </TableCell>
+                <TableCell>{totalCappedRP}</TableCell>
+                <TableCell>{student.osaRP}</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
-         {/* Note Section */}
-         <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
+
+
+        {/* Contrasting, OSA Points, Percentile */}
+        <div>
+          <h1 className="text-center text-xl md:text-2xl font-medium my-4">Total points</h1>
+          <Table className="min-w-full">
+            <TableHeader>
+              <TableRow className="bg-white">
+                <TableHead>Contrasting CCA</TableHead>
+                <TableHead>OSA Points</TableHead>
+                <TableHead>Percentile</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow className="bg-slate-200">
+                <TableCell>{student.Contrasting}</TableCell>
+                <TableCell>{student.osaPoints}</TableCell>
+                <TableCell>{student.Percentile}%</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+          {/* Note Section */}
+          <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4">
             Notes
           </h2>
           <ul className="list-disc list-inside text-base md:text-lg text-gray-700 space-y-2">
             <li>
-              There is a sector CAP of <span className="font-bold">45 points</span>, which may cause the summation of CCAs and RP to not equal total OSA points.
+              There is a sector CAP of <span className="font-bold">45 points</span>, which may cause the summation of CCAs and OSA RP to not equal total OSA points.
             </li>
             <li>
               For hallplay and Chinese Drama, if you are in more than 1 department that is<span className="font-bold"> NOT</span> cast, your total points is capped at 26.
+            </li>
+            <li>
+              You need to at least have a non-negative RP and have a contrasting CCA (denoted by Y if you do, and N if you do not) to stay next year. If you do not fulfill this requirement, you will have to masterlist
             </li>
           </ul>
         </div>
