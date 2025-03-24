@@ -118,7 +118,7 @@ export default function Keips() {
 
 const { cappedRP, uncappedRP } = parseRPBreakdown(student.rpBreakdown);
 
-const startingPoints = semester === 0 ? -22 : semester === 1 || semester === 2 ? 0 : -22;
+const startingPoints = student.semester === 0 ? -22 : student.semester === 1 || student.semester === 2 ? 0 : -22;
 
 const totalCappedRP = Math.min(cappedRP.reduce((sum, item) => sum + item.points, startingPoints),22);
   const osaCCAs = parseCCAs(student.osaCCAs).sort((a, b) => Number(b.total) - Number(a.total));
